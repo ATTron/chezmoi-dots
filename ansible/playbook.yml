@@ -35,11 +35,13 @@
       args:
         creates: "{{ home_dir }}/.local/bin/zoxide"
 
-    - name: Install Rust
-      shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/rustc"
+    - name: Install rust
       become: yes
+      become_user: "{{ target_user }}"
+      shell: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "/home/{{ target_user }}/.cargo/bin/rustup"
 
     - name: Install bob (Neovim version manager)
       shell: . {{ home_dir }}/.cargo/env && cargo install --git https://github.com/MordechaiHadad/bob.git
