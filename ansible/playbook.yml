@@ -39,7 +39,7 @@
       shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
       args:
         creates: "{{ home_dir }}/.cargo/bin/rustc"
-      become: no
+      become: yes
 
     - name: Install bob (Neovim version manager)
       shell: . {{ home_dir }}/.cargo/env && cargo install --git https://github.com/MordechaiHadad/bob.git
