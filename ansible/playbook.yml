@@ -5,8 +5,7 @@
   become: yes
   become_method: sudo
   vars:
-    # username: "{{ lookup('env', 'SUDO_USER') | default(lookup('env', 'USER')) }}"
-    username: "{{ ansible_user_id }}"
+    username: "{{ ansible_user_id }}"  # Use ansible_user_id directly
     home_dir: "/home/{{ username }}"
     go_version: "1.24.2"
 
@@ -110,7 +109,7 @@
         executable: /bin/bash
       become: no
       environment:
-        HOME: "{{ home_dir }}"
+        HOME: "{{ home_dir }}"  # Correcting the HOME variable to the user's home dir
 
     - name: Install Node.js using NVM
       shell: |
@@ -122,7 +121,7 @@
         executable: /bin/bash
       become: no
       environment:
-        HOME: "{{ home_dir }}"
+        HOME: "{{ home_dir }}"  # Correcting the HOME variable to the user's home dir
 
     - name: Install uv package manager
       become: no
