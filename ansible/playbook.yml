@@ -3,12 +3,15 @@
   hosts: localhost
   become: yes
   become_method: sudo
+
   vars:
     go_version: "1.24.2"
     username: "{{ ansible_env.USER }}"
     home_dir: "{{ ansible_env.HOME }}"
 
   tasks:
+    # -- SYSTEM SETUP (root) --
+
     - name: Update apt cache
       apt:
         update_cache: yes
@@ -25,77 +28,6 @@
           - curl
           - git
         state: present
-
-    - name: Install Starship prompt
-      shell: curl -sS https://starship.rs/install.sh | sh -s -- -y
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/starship"
-        executable: /bin/bash
-      become: no
-
-    - name: Install Zoxide
-      shell: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-      args:
-        creates: "{{ home_dir }}/.local/bin/zoxide"
-        executable: /bin/bash
-      become: no
-
-    - name: Add ~/.cargo/bin and ~/.local/bin to PATH in .zshrc
-      lineinfile:
-        path: "{{ home_dir }}/.zshrc"
-        line: 'export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"'
-        insertafter: EOF
-      become: no
-
-    - name: Install rust
-      shell: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/rustup"
-        executable: /bin/bash
-      become: no
-
-    - name: Install bob (Neovim version manager)
-      shell: |
-        export PATH="$HOME/.cargo/bin:$PATH"
-        cargo install --git https://github.com/MordechaiHadad/bob.git
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/bob"
-        executable: /bin/bash
-      become: no
-
-    - name: Install Neovim nightly using bob
-      shell: |
-        export PATH="$HOME/.cargo/bin:$PATH"
-        bob use nightly || echo "failed to set nightly, but continuing"
-      args:
-        executable: /bin/bash
-      become: no
-      ignore_errors: yes
-
-    - name: Install NVM
-      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-      args:
-        creates: "{{ home_dir }}/.nvm/nvm.sh"
-        executable: /bin/bash
-      become: no
-
-    - name: Install Node.js using NVM
-      shell: |
-        export NVM_DIR="{{ home_dir }}/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 22
-        nvm use 22
-      args:
-        executable: /bin/bash
-      become: no
-
-    - name: Install uv package manager
-      shell: curl -LsSf https://astral.sh/uv/install.sh | sh
-      args:
-        creates: "{{ home_dir }}/.local/bin/uv"
-        executable: /bin/bash
-      become: no
 
     - name: Download Go
       get_url:
@@ -126,17 +58,82 @@
         name: "{{ username }}"
         shell: /bin/zsh
 
+    # -- USER SETUP (no root) --
+
+    - name: Install Starship prompt
+      become: no
+      shell: curl -sS https://starship.rs/install.sh | sh -s -- -y
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/starship"
+        executable: /bin/bash
+
+    - name: Install Zoxide
+      become: no
+      shell: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+      args:
+        creates: "{{ home_dir }}/.local/bin/zoxide"
+        executable: /bin/bash
+
+    - name: Install rustup
+      become: no
+      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/rustup"
+        executable: /bin/bash
+
+    - name: Install bob (Neovim version manager)
+      become: no
+      shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        cargo install --git https://github.com/MordechaiHadad/bob.git
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/bob"
+        executable: /bin/bash
+
+    - name: Install Neovim nightly using bob
+      become: no
+      shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        bob use nightly || echo "failed to set nightly, but continuing"
+      args:
+        executable: /bin/bash
+      ignore_errors: yes
+
+    - name: Install NVM
+      become: no
+      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+      args:
+        creates: "{{ home_dir }}/.nvm/nvm.sh"
+        executable: /bin/bash
+
+    - name: Install Node.js using NVM
+      become: no
+      shell: |
+        export NVM_DIR="{{ home_dir }}/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 22
+        nvm use 22
+      args:
+        executable: /bin/bash
+
+    - name: Install uv package manager
+      become: no
+      shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+      args:
+        creates: "{{ home_dir }}/.local/bin/uv"
+        executable: /bin/bash
+
     - name: Install fzf
+      become: no
       git:
         repo: https://github.com/junegunn/fzf.git
         dest: "{{ home_dir }}/.fzf"
         depth: 1
-      become: no
 
     - name: Run fzf installer
+      become: no
       shell: "{{ home_dir }}/.fzf/install --all"
       args:
         creates: "{{ home_dir }}/.fzf/bin/fzf"
         executable: /bin/bash
-      become: no
 
