@@ -1,4 +1,4 @@
 #!/bin/bash
 cd ~/.local/share/chezmoi/ansible
-ansible-playbook -i localhost, -c local playbook.yml -v
+ansible-playbook -i localhost, -c local playbook.yml --extra-vars "target_user=$(logname)" -v
 
