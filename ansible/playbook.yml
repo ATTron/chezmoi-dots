@@ -100,21 +100,28 @@
       ignore_errors: yes
 
     - name: Install NVM
-      become: no
-      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+      shell: |
+        export NVM_DIR="{{ home_dir }}/.nvm"
+        mkdir -p "$NVM_DIR"
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
       args:
         creates: "{{ home_dir }}/.nvm/nvm.sh"
         executable: /bin/bash
+      become: no
+      environment:
+        HOME: "{{ home_dir }}"
 
     - name: Install Node.js using NVM
-      become: no
       shell: |
         export NVM_DIR="{{ home_dir }}/.nvm"
-        source "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
         nvm install 22
         nvm use 22
       args:
         executable: /bin/bash
+      become: no
+      environment:
+        HOME: "{{ home_dir }}"
 
     - name: Install uv package manager
       become: no
