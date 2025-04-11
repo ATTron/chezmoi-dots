@@ -1,13 +1,13 @@
 ---
 - name: Setup Development Environment
   hosts: localhost
+  gather_facts: yes
   become: yes
   become_method: sudo
-
   vars:
+    username: "{{ lookup('env', 'SUDO_USER') | default(lookup('env', 'USER')) }}"
+    home_dir: "/home/{{ username }}"
     go_version: "1.24.2"
-    username: "{{ ansible_env.USER }}"
-    home_dir: "{{ ansible_env.HOME }}"
 
   tasks:
     # -- SYSTEM SETUP (root) --
