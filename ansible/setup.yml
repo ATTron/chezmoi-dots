@@ -1,0 +1,120 @@
+---
+- name: Setup Development Environment
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  vars:
+    go_version: "1.24.2"
+    username: "{{ ansible_env.USER }}"
+    home_dir: "{{ ansible_env.HOME }}"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install system packages
+      apt:
+        name:
+          - zsh
+          - python3
+          - python3-venv
+          - pkg-config
+          - fd-find
+          - wget
+          - curl
+          - git
+        state: present
+
+    - name: Install Starship prompt
+      shell: curl -sS https://starship.rs/install.sh | sh -s -- -y
+      args:
+        creates: /usr/local/bin/starship
+
+    - name: Install Zoxide
+      shell: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+      args:
+        creates: "{{ home_dir }}/.local/bin/zoxide"
+
+    - name: Install Rust
+      shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/rustc"
+      become: no
+
+    - name: Install bob (Neovim version manager)
+      shell: . {{ home_dir }}/.cargo/env && cargo install --git https://github.com/MordechaiHadad/bob.git
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/bob"
+      become: no
+
+    - name: Install Neovim nightly using bob
+      shell: . {{ home_dir }}/.cargo/env && bob use nightly || echo "failed to set nightly, but continuing"
+      args:
+        executable: /bin/bash
+      become: no
+      ignore_errors: yes
+
+    - name: Install NVM
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+      args:
+        creates: "{{ home_dir }}/.nvm/nvm.sh"
+      become: no
+
+    - name: Install Node.js using NVM
+      shell: >
+        export NVM_DIR="{{ home_dir }}/.nvm" &&
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+        nvm install 22 &&
+        nvm use 22
+      args:
+        executable: /bin/bash
+      become: no
+
+    - name: Install uv package manager
+      shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+      args:
+        creates: "{{ home_dir }}/.local/bin/uv"
+      become: no
+
+    - name: Download Go
+      get_url:
+        url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        mode: '0644'
+
+    - name: Extract Go
+      unarchive:
+        src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: /usr/local
+        remote_src: yes
+
+    - name: Create symlink for Go
+      file:
+        src: /usr/local/go/bin/go
+        dest: /usr/local/bin/go
+        state: link
+        force: yes
+
+    - name: Remove Go tarball
+      file:
+        path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        state: absent
+
+    - name: Set zsh as default shell
+      user:
+        name: "{{ username }}"
+        shell: /bin/zsh
+
+    - name: Install fzf
+      git:
+        repo: https://github.com/junegunn/fzf.git
+        dest: "{{ home_dir }}/.fzf"
+        depth: 1
+      become: no
+
+    - name: Run fzf installer
+      shell: "{{ home_dir }}/.fzf/install --all"
+      args:
+        creates: "{{ home_dir }}/.fzf/bin/fzf"
+      become: no

@@ -1,0 +1,4 @@
+[hooks]
+  [hooks.run_after_apply]
+    command = "~/.config/chezmoi/run_ansible.sh"
+

@@ -1,0 +1,14 @@
+[data]
+    name = "Anthony Templeton"
+    email = "twantempleton11@gmail.com"
+
+[git]
+    autoCommit = true
+    autoPush = true
+
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ .Destination }}", "{{ .Source }}", "{{ .Target }}"]
+
+[cd]
+    command = "zsh"
