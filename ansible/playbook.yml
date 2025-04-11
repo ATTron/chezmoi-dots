@@ -5,8 +5,7 @@
   become: yes
   become_method: sudo
   vars:
-    # username: "{{ lookup('env', 'SUDO_USER') | default(lookup('env', 'USER')) }}"
-    username: "{{ ansible_user_id }}"
+    username: "{{ lookup('env', 'SUDO_USER') | default(lookup('env', 'USER')) }}"
     home_dir: "/home/{{ username }}"
     go_version: "1.24.2"
 
