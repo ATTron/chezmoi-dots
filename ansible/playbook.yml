@@ -110,7 +110,7 @@
       become: no
       shell: |
         export NVM_DIR="{{ home_dir }}/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        source "$NVM_DIR/nvm.sh"
         nvm install 22
         nvm use 22
       args:
