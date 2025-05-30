@@ -177,6 +177,14 @@
       register: clang_version
       changed_when: false
 
+    - name: Create symlink for current clang version
+      file:
+        src: "/usr/bin/clang-19"
+        dest: "/usr/bin/clang"
+        state: link
+        force: yes
+
+
     - name: Display Clang version
       debug:
         var: clang_version.stdout
