@@ -148,3 +148,28 @@
         creates: "{{ home_dir }}/.fzf/bin/fzf"
         executable: /bin/bash
 
+    - name: Download LLVM installation script
+      get_url:
+        url: https://apt.llvm.org/llvm.sh
+        dest: /tmp/llvm.sh
+        mode: '0755'
+
+    - name: Execute LLVM installation script
+      command: /tmp/llvm.sh 18
+      become: yes
+      args:
+        creates: /usr/bin/clang-18
+
+    - name: Verify Clang 18 installation
+      command: clang-18 --version
+      register: clang_version
+      changed_when: false
+
+    - name: Display Clang version
+      debug:
+        var: clang_version.stdout
+
+    - name: Clean up installation script
+      file:
+        path: /tmp/llvm.sh
+        state: absent
