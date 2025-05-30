@@ -163,8 +163,8 @@
       args:
         creates: /usr/bin/clang-19
 
-    - name: Verify Clang 18 installation
-      command: clang-18 --version
+    - name: Verify Clang 19 installation
+      command: clang-19 --version
       register: clang_version
       changed_when: false
 
