@@ -81,6 +81,63 @@
         creates: "{{ home_dir }}/.local/bin/zoxide"
         executable: /bin/bash
 
+    - name: Create local bin directory
+      file:
+        path: "{{ home_dir }}/.local/bin"
+        state: directory
+        mode: '0755'
+      become: no
+
+    - name: Download zigup tarball
+      get_url:
+        url: https://github.com/marler8997/zigup/releases/latest/download/zigup-x86_64-linux.tar.gz
+        dest: /tmp/zigup.tar.gz
+        mode: '0644'
+      register: zigup_download
+      become: no
+
+    - name: Extract zigup binary
+      unarchive:
+        src: /tmp/zigup.tar.gz
+        dest: "{{ home_dir }}/.local/bin/"
+        remote_src: yes
+        mode: '0755'
+        creates: "{{ home_dir }}/.local/bin/zigup"
+      become: no
+
+    - name: Clean up zigup tarball
+      file:
+        path: /tmp/zigup.tar.gz
+        state: absent
+
+    - name: Install Zig master using zigup
+      shell: |
+        export PATH="{{ home_dir }}/.local/bin/zig:$PATH"
+        {{ home_dir }}/.local/bin/zigup master
+      register: zig_install
+      changed_when: "'already installed' not in zig_install.stderr"
+      become: no
+
+    - name: Create symlink for current zig version
+      file:
+        src: "{{ home_dir }}/.local/zig"
+        dest: "{{ home_dir }}/.local/bin/zig"
+        state: link
+        force: yes
+      become: no
+
+    - name: Verify Zig installation
+      shell: |
+        export PATH="{{ home_dir }}/.local/bin:{{ home_dir }}/.local/zig:$PATH"
+        zig version
+      register: zig_version
+      changed_when: false
+      become: no
+
+    - name: Display Zig version
+      debug:
+        var: zig_version.stdout
+
     - name: Install rustup
       become: no
       shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -194,59 +251,3 @@
         path: /tmp/llvm.sh
         state: absent
 
-    - name: Create local bin directory
-      file:
-        path: "{{ ansible_env.HOME }}/.local/bin"
-        state: directory
-        mode: '0755'
-      become: no
-
-    - name: Download zigup tarball
-      get_url:
-        url: https://github.com/marler8997/zigup/releases/latest/download/zigup-x86_64-linux.tar.gz
-        dest: /tmp/zigup.tar.gz
-        mode: '0644'
-      register: zigup_download
-      become: no
-
-    - name: Extract zigup binary
-      unarchive:
-        src: /tmp/zigup.tar.gz
-        dest: "{{ ansible_env.HOME }}/.local/bin/"
-        remote_src: yes
-        mode: '0755'
-        creates: "{{ ansible_env.HOME }}/.local/bin/zigup"
-      become: no
-
-    - name: Clean up zigup tarball
-      file:
-        path: /tmp/zigup.tar.gz
-        state: absent
-
-    - name: Install Zig master using zigup
-      shell: |
-        export PATH="{{ ansible_env.HOME }}/.local/bin/zig:$PATH"
-        {{ ansible_env.HOME }}/.local/bin/zigup master
-      register: zig_install
-      changed_when: "'already installed' not in zig_install.stderr"
-      become: no
-
-    - name: Create symlink for current zig version
-      file:
-        src: "{{ ansible_env.HOME }}/.local/zig"
-        dest: "{{ ansible_env.HOME }}/.local/bin/zig"
-        state: link
-        force: yes
-      become: no
-
-    - name: Verify Zig installation
-      shell: |
-        export PATH="{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.HOME }}/.local/zig:$PATH"
-        zig version
-      register: zig_version
-      changed_when: false
-      become: no
-
-    - name: Display Zig version
-      debug:
-        var: zig_version.stdout
