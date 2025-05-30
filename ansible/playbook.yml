@@ -113,7 +113,7 @@
     - name: Install Zig master using zigup
       shell: |
         export PATH="{{ home_dir }}/.local/bin/zig:$PATH"
-        {{ home_dir }}/.local/bin/zigup master --link-path /usr/bin/zig
+        {{ home_dir }}/.local/bin/zigup master --path-link /usr/bin/zig
       register: zig_install
       changed_when: "'already installed' not in zig_install.stderr"
       become: no
