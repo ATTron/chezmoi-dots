@@ -31,6 +31,9 @@
           - wget
           - curl
           - git
+          - lsb-release
+          - software-properties-common
+          - gnupg
         state: present
 
     - name: Download Go
@@ -155,10 +158,10 @@
         mode: '0755'
 
     - name: Execute LLVM installation script
-      command: /tmp/llvm.sh 18
+      command: /tmp/llvm.sh 19
       become: yes
       args:
-        creates: /usr/bin/clang-18
+        creates: /usr/bin/clang-19
 
     - name: Verify Clang 18 installation
       command: clang-18 --version
