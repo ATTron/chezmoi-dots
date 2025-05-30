@@ -200,12 +200,25 @@
         state: directory
         mode: '0755'
 
-    - name: Download zigup binary
+    - name: Download zigup tarball
       get_url:
-        url: https://github.com/marler8997/zigup/releases/latest/download/zigup-linux-x86_64
-        dest: "{{ ansible_env.HOME }}/.local/bin/zigup"
-        mode: '0755'
+        url: https://github.com/marler8997/zigup/releases/latest/download/zigup-x86_64-linux.tar.gz
+        dest: /tmp/zigup.tar.gz
+        mode: '0644'
       register: zigup_download
+
+    - name: Extract zigup binary
+      unarchive:
+        src: /tmp/zigup.tar.gz
+        dest: "{{ ansible_env.HOME }}/.local/bin/"
+        remote_src: yes
+        mode: '0755'
+        creates: "{{ ansible_env.HOME }}/.local/bin/zigup"
+
+    - name: Clean up zigup tarball
+      file:
+        path: /tmp/zigup.tar.gz
+        state: absent
 
     - name: Verify zigup installation
       command: "{{ ansible_env.HOME }}/.local/bin/zigup version"
