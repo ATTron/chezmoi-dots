@@ -113,17 +113,9 @@
     - name: Install Zig master using zigup
       shell: |
         export PATH="{{ home_dir }}/.local/bin/zig:$PATH"
-        {{ home_dir }}/.local/bin/zigup master --path-link /usr/bin/zig
+        {{ home_dir }}/.local/bin/zigup master --path-link {{ home_dir }}/.local/bin/zig
       register: zig_install
       changed_when: "'already installed' not in zig_install.stderr"
-      become: no
-
-    - name: Create symlink for current zig version
-      file:
-        src: "{{ home_dir }}/.local/zig"
-        dest: "{{ home_dir }}/.local/bin/zig"
-        state: link
-        force: yes
       become: no
 
     - name: Verify Zig installation
