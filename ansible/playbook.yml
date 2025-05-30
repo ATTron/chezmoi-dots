@@ -235,7 +235,7 @@
         create: yes
 
     - name: Install Zig master using zigup
-      command: "{{ ansible_env.HOME }}/.local/bin/zigup master --"
+      command: "{{ ansible_env.HOME }}/.local/bin/zigup master"
       register: zig_install
       changed_when: "'already installed' not in zig_install.stderr"
 
