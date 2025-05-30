@@ -97,6 +97,15 @@
         creates: "{{ home_dir }}/.cargo/bin/bob"
         executable: /bin/bash
 
+    - name: Install just (makefile alternative)
+      become: no
+      shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        cargo install just
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/just"
+        executable: /bin/bash
+
     - name: Install Neovim nightly using bob
       become: no
       shell: |
@@ -176,3 +185,62 @@
       file:
         path: /tmp/llvm.sh
         state: absent
+
+    - name: Create local bin directory
+      file:
+        path: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+        mode: '0755'
+
+    - name: Download zigup binary
+      get_url:
+        url: https://github.com/marler8997/zigup/releases/latest/download/zigup-linux-x86_64
+        dest: "{{ ansible_env.HOME }}/.local/bin/zigup"
+        mode: '0755'
+      register: zigup_download
+
+    - name: Verify zigup installation
+      command: "{{ ansible_env.HOME }}/.local/bin/zigup version"
+      register: zigup_version
+      changed_when: false
+
+    - name: Display zigup version
+      debug:
+        var: zigup_version.stdout
+
+    - name: Install Zig master using zigup
+      command: "{{ ansible_env.HOME }}/.local/bin/zigup master"
+      register: zig_install
+      changed_when: "'already installed' not in zig_install.stderr"
+
+    - name: Add ~/.local/bin to PATH in .bashrc
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        line: 'export PATH="$HOME/.local/bin:$PATH"'
+        regexp: '^export PATH=.*\.local/bin.*'
+        create: yes
+
+    - name: Add ~/.local/zig to PATH in .bashrc
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        line: 'export PATH="$HOME/.local/zig:$PATH"'
+        regexp: '^export PATH=.*\.local/zig.*'
+        create: yes
+
+    - name: Create symlink for current zig version
+      file:
+        src: "{{ ansible_env.HOME }}/.local/zig"
+        dest: "{{ ansible_env.HOME }}/.local/bin/zig"
+        state: link
+        force: yes
+
+    - name: Verify Zig installation
+      shell: |
+        export PATH="{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.HOME }}/.local/zig:$PATH"
+        zig version
+      register: zig_version
+      changed_when: false
+
+    - name: Display Zig version
+      debug:
+        var: zig_version.stdout

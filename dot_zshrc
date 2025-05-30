@@ -34,6 +34,10 @@ export PATH="${HOME}/.cargo/bin:${PATH}"
 export GOPATH="${HOME}/go"
 export PATH="${GOPATH}/bin:${PATH}"
 
+# zig setup
+export PATH="${HOME}/.local/bin:$PATH"
+export PATH="${HOME}/.local/zig:$PATH"
+
 # nvm setup
 export NVM_DIR="$HOME/.nvm"
   [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
