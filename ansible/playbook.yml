@@ -34,6 +34,7 @@
           - lsb-release
           - software-properties-common
           - gnupg
+          - valgrind
         state: present
 
     - name: Download Go
