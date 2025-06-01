@@ -155,7 +155,7 @@
 
     - name: Verify c3 installation
       shell: |
-        export PATH="{{ home_dir }}/.local/bin:$PATH"
+        export PATH="{{ home_dir }}/.local/bin/c3/:$PATH"
         c3c --version
       register: c3c_version
       changed_when: false

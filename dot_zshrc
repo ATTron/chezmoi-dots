@@ -38,6 +38,9 @@ export PATH="${GOPATH}/bin:${PATH}"
 export PATH="${HOME}/.local/bin:$PATH"
 export PATH="${HOME}/.local/zig:$PATH"
 
+# c3 setup
+export PATH="${HOME}/.local/bin/c3:$PATH"
+
 # nvm setup
 export NVM_DIR="$HOME/.nvm"
   [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
