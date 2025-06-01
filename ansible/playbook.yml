@@ -61,6 +61,13 @@
         path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
         state: absent
 
+    - name: Install hugo
+      become: no
+      shell: go install github.com/gohugoio/hugo@latest
+      args:
+        creates: "{{ home_dir }}/go/bin/hugo"
+        executable: /bin/bash
+
     - name: Set zsh as default shell
       user:
         name: "{{ username }}"
