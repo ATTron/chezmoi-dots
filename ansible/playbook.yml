@@ -134,14 +134,14 @@
     - name: Download c3 tarball
       get_url:
         url: https://github.com/c3lang/c3c/releases/latest/download/c3-linux.tar.gz
-        dest: /tmp/c3c.tar.gz
+        dest: /tmp/c3-linux.tar.gz
         mode: '0644'
       register: c3c_download
       become: no
 
     - name: Extract c3 binary
       unarchive:
-        src: /tmp/c3c.tar.gz
+        src: /tmp/c3-linux.tar.gz
         dest: "{{ home_dir }}/.local/bin/"
         remote_src: yes
         mode: '0755'
@@ -150,7 +150,7 @@
 
     - name: Clean up c3 tarball
       file:
-        path: /tmp/c3c.tar.gz
+        path: /tmp/c3-linux.tar.gz
         state: absent
 
     - name: Verify c3 installation
