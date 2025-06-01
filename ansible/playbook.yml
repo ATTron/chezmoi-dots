@@ -131,6 +131,40 @@
       debug:
         var: zig_version.stdout
 
+    - name: Download c3 tarball
+      get_url:
+        url: https://github.com/c3lang/c3c/releases/latest/download/c3-linux.tar.gz
+        dest: /tmp/c3c.tar.gz
+        mode: '0644'
+      register: c3c_download
+      become: no
+
+    - name: Extract c3 binary
+      unarchive:
+        src: /tmp/c3c.tar.gz
+        dest: "{{ home_dir }}/.local/bin/"
+        remote_src: yes
+        mode: '0755'
+        creates: "{{ home_dir }}/.local/bin/c3c"
+      become: no
+
+    - name: Clean up c3 tarball
+      file:
+        path: /tmp/c3c.tar.gz
+        state: absent
+
+    - name: Verify c3 installation
+      shell: |
+        export PATH="{{ home_dir }}/.local/bin:{{ home_dir }}/.local/zig:$PATH"
+        c3c --version
+      register: c3c_version
+      changed_when: false
+      become: no
+
+    - name: Display c3 version
+      debug:
+        var: c3c_version.stdout
+
     - name: Install rustup
       become: no
       shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
