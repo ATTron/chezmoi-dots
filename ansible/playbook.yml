@@ -145,7 +145,7 @@
         dest: "{{ home_dir }}/.local/bin/"
         remote_src: yes
         mode: '0755'
-        creates: "{{ home_dir }}/.local/bin/c3c"
+        creates: "{{ home_dir }}/.local/bin/c3/c3c"
       become: no
 
     - name: Clean up c3 tarball
