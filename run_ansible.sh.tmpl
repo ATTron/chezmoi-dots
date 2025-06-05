@@ -1,4 +1,5 @@
 #!/bin/bash
+export ANSIBLE_FORCE_COLOR=1
 cd ~/.local/share/chezmoi/ansible
 ansible-playbook -i localhost, -c local playbook.yml -v
 
