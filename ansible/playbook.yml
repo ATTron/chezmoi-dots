@@ -101,7 +101,7 @@
       become: no
       shell: go install github.com/jesseduffield/lazygit@latest
       args:
-        creates: "{{ home_dir }}/go/bin/hugo"
+        creates: "{{ home_dir }}/go/bin/lazygit"
         executable: /bin/bash
 
 
