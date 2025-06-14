@@ -35,6 +35,7 @@
           - software-properties-common
           - gnupg
           - valgrind
+          - cloc
           - libsdl2-dev
         state: present
 
