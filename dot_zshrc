@@ -22,6 +22,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 # fzf
 export PATH="${HOME}/.fzf/bin:${PATH}"
 
+# fix ghostty
+export TERM="xterm-256color"
 
 # nvm setup
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -94,6 +96,8 @@ eval "$(zoxide init --cmd cd zsh)"
 # alias section
 alias nvim="~/.local/share/bob/nvim-bin/nvim"
 alias ls='ls --color'
+alias ll='ls -l'
+alias la='ls -la'
 #alias ls='eza $eza_params'
 #alias l='eza --git-ignore $eza_params'
 #alias ll='eza --all --header --long $eza_params'
