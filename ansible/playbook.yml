@@ -183,13 +183,6 @@
       debug:
         var: c3c_version.stdout
 
-    - name: Install rustup
-      become: no
-      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/rustup"
-        executable: /bin/bash
-
     - name: Download OpenTofu install script
       get_url:
         url: https://get.opentofu.org/install-opentofu.sh
@@ -213,6 +206,13 @@
       file:
         path: /tmp/install-opentofu.sh
         state: absent
+
+    - name: Install rustup
+      become: no
+      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/rustup"
+        executable: /bin/bash
 
     - name: Install bob (Neovim version manager)
       become: no
