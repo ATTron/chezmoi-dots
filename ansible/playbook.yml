@@ -194,7 +194,7 @@
       become: no
       shell: |
         export PATH="$HOME/.cargo/bin:$PATH"
-        cargo install bob-nvim
+        cargo install --git https://github.com/MordechaiHadad/bob --locked
       args:
         creates: "{{ home_dir }}/.cargo/bin/bob"
         executable: /bin/bash
