@@ -190,6 +190,30 @@
         creates: "{{ home_dir }}/.cargo/bin/rustup"
         executable: /bin/bash
 
+    - name: Download OpenTofu install script
+      get_url:
+        url: https://get.opentofu.org/install-opentofu.sh
+        dest: /tmp/install-opentofu.sh
+        mode: '0755'
+
+    - name: Install OpenTofu
+      shell: /tmp/install-opentofu.sh --install-method deb
+      args:
+        creates: /usr/local/bin/tofu
+
+    - name: Verify OpenTofu installation
+      command: tofu version
+      register: tofu_version
+
+    - name: Display OpenTofu version
+      debug:
+        msg: "OpenTofu installed: {{ tofu_version.stdout }}"
+
+    - name: Clean up install script
+      file:
+        path: /tmp/install-opentofu.sh
+        state: absent
+
     - name: Install bob (Neovim version manager)
       become: no
       shell: |
