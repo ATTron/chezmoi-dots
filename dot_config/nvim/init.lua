@@ -65,7 +65,11 @@ vim.opt.expandtab = true
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
-vim.opt.updatetime = 300
+vim.opt.autoread = true
+vim.opt.autowrite = false
+
+-- Behavoir options
+vim.opt.autochdir = false
 
 -- [[ Basic Keymaps ]]
 --
