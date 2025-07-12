@@ -37,6 +37,7 @@
           - valgrind
           - cloc
           - libsdl2-dev
+          - tmux
           - xclip
           - wl-clipboard
         state: present
