@@ -61,6 +61,12 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
+-- Handle File options
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.swapfile = false
+vim.opt.updatetime = 300
+
 -- [[ Basic Keymaps ]]
 --
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
