@@ -111,12 +111,30 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- buffer movement
-vim.keymap.set("n", "bn", "<cmd>bNext<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "bn", "<cmd>bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "bp", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 
 -- increment/decrement
 vim.keymap.set("n", "+", "<C-a>")
 vim.keymap.set("n", "=", "<C-x>")
+
+-- center when jumping
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+
+-- resize vertical windows
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window size" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window size" })
+
+-- move lines up/down
+vim.keymaps.set("n", "<A-j>", ":m .+1<CR>==")
+vim.keymaps.set("n", "<A-k>", ":m .-2<CR>==")
+vim.keymaps.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
+vim.keymaps.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
+
+-- indent lines
+vim.keymap.set("v", "<", "<gv")
+vim.keymap.set("v", ">", ">gv")
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
