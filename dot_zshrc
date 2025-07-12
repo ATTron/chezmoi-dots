@@ -98,6 +98,7 @@ alias nvim="~/.local/share/bob/nvim-bin/nvim"
 alias ls='ls --color'
 alias ll='ls -l'
 alias la='ls -la'
+alias tmux='tmux -u'
 #alias ls='eza $eza_params'
 #alias l='eza --git-ignore $eza_params'
 #alias ll='eza --all --header --long $eza_params'
