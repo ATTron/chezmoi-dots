@@ -96,6 +96,7 @@ eval "$(zoxide init --cmd cd zsh)"
 # alias section
 alias nvim="~/.local/share/bob/nvim-bin/nvim"
 alias ls='ls --color'
+alias setup-pod='devpod up . --dotfiles git@github.com:ATTron/devpod-dotfiles.git --configure-ssh --git-ssh-signing-key ~/.ssh/id_ed25519 --ide None --recreate'
 alias ll='ls -l'
 alias la='ls -la'
 alias tmux='tmux -u'
