@@ -73,6 +73,9 @@
         shell: /bin/zsh
 
     # -- USER SETUP (no root) --
+    - name: Setup rebase-push git alias
+      become: no
+      shell: git config --global alias.rebase-push '!git rebase origin/main && git push --force-with-lease'
 
     - name: Install Starship prompt
       become: no
