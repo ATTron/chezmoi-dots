@@ -37,6 +37,8 @@
           - valgrind
           - cloc
           - libsdl2-dev
+          - xclip
+          - wl-clipboard
         state: present
 
     - name: Download Go
