@@ -93,6 +93,8 @@ vim.keymap.set("n", "bp", ":bprevious<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window size" })
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window size" })
 
+-- update packages
+vim.keymap.set("n", "<leader>pp", vim.pack.update)
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- non plugin keymaps end
