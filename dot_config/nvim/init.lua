@@ -3,24 +3,26 @@ vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
 
+vim.opt.showmode = false
+
 -- set line numbers
-vim.o.number = true
-vim.o.relativenumber = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- enable mouse
-vim.o.mouse = "a"
+vim.opt.mouse = "a"
 
 -- clipboard
-vim.o.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 
 -- set autochdir
-vim.o.autochdir = false
+vim.opt.autochdir = false
 
 -- Decrease update time
 vim.opt.updatetime = 100
 
 -- undo history enabled
-vim.o.undofile = true
+vim.opt.undofile = true
 
 -- case insensitive search unless capital letters present
 vim.opt.ignorecase = true
@@ -36,12 +38,14 @@ vim.opt.scrolloff = 5
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.breakindent = true
+vim.opt.inccommand = "split"
 
 -- set blame line color
 vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = "#60c2db", italic = true })
 
 -- enable cursor line
-vim.o.cursorline = true
+vim.opt.cursorline = true
 
 -- file options
 vim.opt.backup = false
@@ -85,6 +89,10 @@ vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 vim.keymap.set("n", "bn", ":bnext<CR>")
 vim.keymap.set("n", "bp", ":bprevious<CR>")
 
+-- resize vertical windows
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window size" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window size" })
+
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- non plugin keymaps end
@@ -119,6 +127,33 @@ vim.api.nvim_create_autocmd("User", {
       Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
     end
   end,
+})
+
+vim.diagnostic.config({
+  severity_sort = true,
+  float = { border = "rounded", source = "if_many" },
+  underline = { severity = vim.diagnostic.severity.ERROR },
+  signs = vim.g.have_nerd_font and {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "󰅚 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.INFO] = "󰋽 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    },
+  } or {},
+  virtual_text = {
+    source = "if_many",
+    spacing = 2,
+    format = function(diagnostic)
+      local diagnostic_message = {
+        [vim.diagnostic.severity.ERROR] = diagnostic.message,
+        [vim.diagnostic.severity.WARN] = diagnostic.message,
+        [vim.diagnostic.severity.INFO] = diagnostic.message,
+        [vim.diagnostic.severity.HINT] = diagnostic.message,
+      }
+      return diagnostic_message[diagnostic.severity]
+    end,
+  },
 })
 
 -- packages
@@ -160,7 +195,7 @@ local function find_shell()
     end
   end
 
-  return vim.o.shell -- fallback to default
+  return vim.opt.shell -- fallback to default
 end
 
 vim.opt.shell = find_shell()
