@@ -120,6 +120,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    if vim.bo.filetype == "" then
+      vim.cmd("filetype detect")
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "OilActionsPost",
   callback = function(event)
@@ -175,6 +183,10 @@ require("conform").setup({
 require("nvim-treesitter.configs").setup({
   ensure_installed = { "lua", "c", "vim" },
   auto_install = true,
+  highlight = {
+    enable = true,
+  },
+  indent = { enable = true },
 })
 
 -- enable lsp
