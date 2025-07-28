@@ -18,6 +18,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 # env setup
 #. "$HOME/.local/bin/env"
+# linuxbrew to PATH
+export PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
 
 # fzf
 export PATH="${HOME}/.fzf/bin:${PATH}"
@@ -38,6 +40,10 @@ export PATH="${HOME}/.local/zig:$PATH"
 
 # c3 setup
 export PATH="${HOME}/.local/bin/c3:$PATH"
+
+# nvm setup
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # speed up zsh
 SPACESHIP_PROMPT_ASYNC=true
