@@ -4,6 +4,7 @@ vim.pack.add({
 
 -- set colorscheme
 require("gruvbox").setup({
+  terminal_colors = true,
   transparent_mode = true,
 })
 vim.o.background = "dark"
