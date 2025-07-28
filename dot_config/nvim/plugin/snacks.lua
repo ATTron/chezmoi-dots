@@ -40,9 +40,9 @@ require("snacks").setup({
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
   callback = function(event)
-    vim.keymap.set("n", "gd", "<cmd>lua Snacks.picker.lsp_definitions()<cr>", { desc = "Goto Definition" })
-    vim.keymap.set("n", "gD", "<cmd>lua Snacks.picker.lsp_declarations()<cr>", { desc = "Goto Declarations" })
-    vim.keymap.set("n", "gr", "<cmd>lua Snacks.picker.lsp_references()<cr>", { desc = "Goto References" })
+    vim.keymap.set("n", "gd", "<cmd>lua Snacks.picker.lsp_definitions()<cr>")
+    vim.keymap.set("n", "gD", "<cmd>lua Snacks.picker.lsp_declarations()<cr>")
+    vim.keymap.set("n", "gr", "<cmd>lua Snacks.picker.lsp_references()<cr>")
     vim.keymap.set("n", "<leader>K", vim.lsp.buf.hover)
 
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -65,4 +65,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- file picker
-vim.keymap.set("n", "<leader>sf", "<cmd>lua Snacks.picker.files({})<cr>", { desc = "Search files" })
+vim.keymap.set("n", "<leader>sf", "<cmd>lua Snacks.picker.files({})<cr>")
