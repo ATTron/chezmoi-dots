@@ -1,4 +1,3 @@
--- create leader as <space>
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -13,6 +12,9 @@ vim.o.mouse = "a"
 
 -- clipboard
 vim.o.clipboard = "unnamedplus"
+
+-- set autochdir
+vim.o.autochdir = false
 
 -- Decrease update time
 vim.opt.updatetime = 100
@@ -76,12 +78,14 @@ vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
-
 -- force format buffer
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
+-- buffer movement
+vim.keymap.set("n", "bn", ":bnext<CR>")
+vim.keymap.set("n", "bp", ":bprevious<CR>")
 
-vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- non plugin keymaps end
 
@@ -108,6 +112,15 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OilActionsPost",
+  callback = function(event)
+    if event.data.actions.type == "move" then
+      Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+    end
+  end,
+})
+
 -- packages
 vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -124,10 +137,30 @@ require("conform").setup({
     rust = { "rustfmt", lsp_format = "fallback" },
   },
 })
-require "nvim-treesitter.configs".setup({
+require("nvim-treesitter.configs").setup({
   ensure_installed = { "lua", "c", "vim" },
   auto_install = true,
 })
 
 -- enable lsp
 vim.lsp.enable({ "lua_ls", "rust_analyzer" })
+
+-- shell detection
+-- Auto-detect shell
+local function find_shell()
+  local shells = {
+    vim.env.HOME .. "/.local/bin/zsh",
+    "/usr/bin/zsh",
+    "/usr/local/bin/zsh",
+  }
+
+  for _, shell in ipairs(shells) do
+    if vim.fn.executable(shell) == 1 then
+      return shell
+    end
+  end
+
+  return vim.o.shell -- fallback to default
+end
+
+vim.opt.shell = find_shell()
