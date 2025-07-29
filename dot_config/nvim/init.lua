@@ -173,7 +173,16 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim.git" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+  { src = "https://github.com/ellisonleao/gruvbox.nvim" },
 })
+
+-- set colorscheme
+require("gruvbox").setup({
+  terminal_colors = true,
+  transparent_mode = true,
+})
+
+vim.cmd.colorscheme("gruvbox")
 
 -- setup plugins
 require("conform").setup({
