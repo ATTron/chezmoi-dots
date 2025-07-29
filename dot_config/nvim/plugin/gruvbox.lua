@@ -5,15 +5,6 @@ vim.pack.add({
 -- set colorscheme
 require("gruvbox").setup({
   transparent_mode = true,
-  overrides = {
-    FloatBorder = {
-      fg = "#ebdbb2",
-      bg = "#3c3836",
-    },
-    NormalFloat = {
-      bg = "#282828",
-    },
-  },
   terminal_colors = true,
 })
 vim.opt.background = "dark"
