@@ -41,9 +41,6 @@ vim.opt.expandtab = true
 vim.opt.breakindent = true
 vim.opt.inccommand = "split"
 
--- set blame line color
-vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = "#60c2db", italic = true })
-
 -- enable cursor line
 vim.opt.cursorline = true
 
@@ -137,6 +134,12 @@ vim.api.nvim_create_autocmd("User", {
     if event.data.actions.type == "move" then
       Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = "#60c2db", italic = true })
   end,
 })
 
