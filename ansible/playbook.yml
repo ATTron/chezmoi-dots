@@ -42,7 +42,15 @@
           - tmux
           - xclip
           - wl-clipboard
+          - clangd-19
         state: present
+
+    - name: Create symlink for clangd
+      file:
+        src: /usr/bin/clangd-19
+        dest: /usr/bin/clangd
+        state: link
+        force: yes
 
     - name: Download Go
       get_url:
@@ -203,6 +211,15 @@
       shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       args:
         creates: "{{ home_dir }}/.cargo/bin/rustup"
+        executable: /bin/bash
+
+
+    - name: Install rust-analyzer
+      become: no
+      shell: |
+        rustup component add rust-analyzer
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/rust-analyzer"
         executable: /bin/bash
 
     - name: Install bob (Neovim version manager)
