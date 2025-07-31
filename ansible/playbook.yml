@@ -218,9 +218,6 @@
       become: no
       shell: |
         rustup component add rust-analyzer
-      args:
-        creates: "{{ home_dir }}/.cargo/bin/rust-analyzer"
-        executable: /bin/bash
 
     - name: Install bob (Neovim version manager)
       become: no
