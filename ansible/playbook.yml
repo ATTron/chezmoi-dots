@@ -217,6 +217,7 @@
     - name: Install rust-analyzer
       become: no
       shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
         rustup component add rust-analyzer
 
     - name: Install bob (Neovim version manager)
