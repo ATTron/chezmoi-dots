@@ -31,6 +31,8 @@
           - wget
           - curl
           - git
+          - jq
+          - yq
           - lsb-release
           - software-properties-common
           - gnupg
@@ -110,6 +112,13 @@
       shell: go install github.com/jesseduffield/lazygit@latest
       args:
         creates: "{{ home_dir }}/go/bin/lazygit"
+        executable: /bin/bash
+
+    - name: Install sops
+      become: no
+      shell: go install github.com/getsops/sops/v3/cmd/sops@latest
+      args:
+        creates: "{{ home_dir }}/go/bin/sops"
         executable: /bin/bash
 
 
