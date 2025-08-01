@@ -279,6 +279,13 @@
         creates: "{{ home_dir }}/.local/bin/uv"
         executable: /bin/bash
 
+    - name: Install ruff
+      become: no
+      shell: uv tool install ruff
+      args:
+        creates: "{{ home_dir }}/.local/bin/ruff"
+        executable: /bin/bash
+
     - name: Install fzf
       become: no
       git:
