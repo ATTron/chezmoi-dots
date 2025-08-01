@@ -43,6 +43,7 @@
           - xclip
           - wl-clipboard
           - clangd-19
+          - nnn
         state: present
 
     - name: Create symlink for clangd
@@ -257,7 +258,7 @@
         executable: /bin/bash
       become: no
       environment:
-        HOME: "{{ home_dir }}"  # Correcting the HOME variable to the user's home dir
+        HOME: "{{ home_dir }}"
 
     - name: Install Node.js using NVM
       shell: |
@@ -269,7 +270,7 @@
         executable: /bin/bash
       become: no
       environment:
-        HOME: "{{ home_dir }}"  # Correcting the HOME variable to the user's home dir
+        HOME: "{{ home_dir }}"
 
     - name: Install uv package manager
       become: no
