@@ -8,6 +8,8 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 
 export SHELL="/usr/bin/zsh"
+export EDITOR="${HOME}/.local/share/bob/nvim-bin/nvim"
+export NNN_OPENER=$EDITOR
 
 # keybinds
 # bindkey -v # vim keybinds
