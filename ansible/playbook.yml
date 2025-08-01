@@ -281,7 +281,9 @@
 
     - name: Install ruff
       become: no
-      shell: uv tool install ruff
+      shell: |
+        export PATH="$HOME/.local/bin:$PATH"
+        uv tool install ruff
       args:
         creates: "{{ home_dir }}/.local/bin/ruff"
         executable: /bin/bash
