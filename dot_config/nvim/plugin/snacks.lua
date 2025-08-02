@@ -11,6 +11,7 @@ require("snacks").setup({
   input = { enabled = false },
   lazygit = { enabled = false },
   picker = {
+    prompt = "🦆 ",
     enabled = true,
     formatters = {
       file = {
