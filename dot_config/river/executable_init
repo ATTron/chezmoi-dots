@@ -17,7 +17,7 @@ riverctl map normal Super+Shift L spawn "gtklock"
 riverctl map normal Super Return spawn ghostty
 riverctl map normal Super o spawn zen-browser
 riverctl map normal Super d spawn fuzzel
-riverctl map normal Super+Shift C spawn "/home/templeton/.config/river/init"
+riverctl map normal Super+Shift C spawn "$HOME/.config/river/init"
 
 
 # Super+Q to close the focused view
@@ -134,20 +134,20 @@ riverctl map passthrough Super F11 enter-mode normal
 for mode in normal locked
 do
     # Control pulse audio volume with pamixer (https://github.com/cdemoulins/pamixer)
-    riverctl map $mode None XF86AudioRaiseVolume  spawn "/home/templeton/.config/sway/scripts/sound.sh --inc"
-    riverctl map $mode None XF86AudioLowerVolume  spawn "/home/templeton/.config/sway/scripts/sound.sh --dec"
-    riverctl map $mode None XF86AudioMute  spawn "/home/templeton/.config/sway/scripts/sound.sh --mute"
+    riverctl map $mode None XF86AudioRaiseVolume  spawn "$HOME/.config/sway/scripts/sound.sh --inc"
+    riverctl map $mode None XF86AudioLowerVolume  spawn "$HOME/.config/sway/scripts/sound.sh --dec"
+    riverctl map $mode None XF86AudioMute  spawn "$HOME/.config/sway/scripts/sound.sh --mute"
 
     # Control MPRIS aware media players with playerctl (https://github.com/altdesktop/playerctl)
-    #riverctl map $mode None XF86AudioPlayPause spawn "/home/mukul/.config/river/scripts/MediaCtrl.zsh --pause"
-    #riverctl map $mode None XF86AudioPause spawn "/home/mukul/.config/river/scripts/MediaCtrl.zsh --pause"
-    #riverctl map $mode None XF86AudioPlay  spawn "/home/mukul/.config/river/scripts/MediaCtrl.zsh --pause"
-    #riverctl map $mode None XF86AudioPrev  spawn "/home/mukul/.config/river/scripts/MediaCtrl.zsh --prv"
-    #riverctl map $mode None XF86AudioNext  spawn "/home/mukul/.config/river/scripts/MediaCtrl.zsh --nxt"
+    #riverctl map $mode None XF86AudioPlayPause spawn "$HOME/.config/river/scripts/MediaCtrl.zsh --pause"
+    #riverctl map $mode None XF86AudioPause spawn "$HOME/.config/river/scripts/MediaCtrl.zsh --pause"
+    #riverctl map $mode None XF86AudioPlay  spawn "$HOME/.config/river/scripts/MediaCtrl.zsh --pause"
+    #riverctl map $mode None XF86AudioPrev  spawn "$HOME/.config/river/scripts/MediaCtrl.zsh --prv"
+    #riverctl map $mode None XF86AudioNext  spawn "$HOME/.config/river/scripts/MediaCtrl.zsh --nxt"
 
     # Control screen backlight brightness with brightnessctl (https://github.com/Hummer12007/brightnessctl)
-    riverctl map $mode None XF86MonBrightnessUp   spawn "/home/templeton/.config/sway/scripts/brightness.sh --inc"
-    riverctl map $mode None XF86MonBrightnessDown spawn "/home/templeton/.config/sway/scripts/brightness.sh --dec"
+    riverctl map $mode None XF86MonBrightnessUp   spawn "$HOME/.config/sway/scripts/brightness.sh --inc"
+    riverctl map $mode None XF86MonBrightnessDown spawn "$HOME/.config/sway/scripts/brightness.sh --dec"
 
 done
 
@@ -214,7 +214,7 @@ xset b off &
 nm-applet &
 wl-paste --watch cliphist store &
 /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
-swaybg -i /home/templeton/Pictures/wp_dbz.png -m fill &
+swaybg -i $HOME/Pictures/wp_dbz.png -m fill &
 waybar &
 mako &
 # blueman-applet &
