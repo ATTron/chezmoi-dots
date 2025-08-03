@@ -205,7 +205,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- enable lsp
-vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "clangd", "gopls" })
+vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "clangd" })
 
 -- shell detection
 -- Auto-detect shell
