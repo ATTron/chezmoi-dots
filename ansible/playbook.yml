@@ -11,7 +11,7 @@
          or (lookup('env', 'USER') | default('')) 
          or 'vscode' }}
     home_dir: "/home/{{ username }}"
-    go_version: "1.24.2"
+    go_version: "1.24.5"
 
   tasks:
     # -- SYSTEM SETUP (root) --
