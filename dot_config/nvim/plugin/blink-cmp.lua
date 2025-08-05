@@ -92,7 +92,7 @@ if success then
       },
       menu = {
         auto_show = function()
-          return not require("luasnip").expand_or_jumpable() and not in_treesitter_capture("string")
+          return not require("luasnip").expand_or_jumpable() and not in_treesitter_capture({"comment", "string"})
         end,
         -- auto_show = true,
         draw = {
