@@ -1,5 +1,8 @@
 vim.pack.add({
-  { src = "https://github.com/saghen/blink.cmp" },
+  {
+    src = "https://github.com/saghen/blink.cmp",
+    version = "v1.3.1",
+  },
 })
 
 local utils = require("utils")
@@ -26,6 +29,7 @@ if success then
     },
 
     appearance = {
+      use_nvim_cmp_as_default = true,
       nerd_font_variant = 'mono'
     },
 
@@ -50,8 +54,20 @@ if success then
           border = 'rounded',
         }
       },
+      menu = {
+        auto_show = true,
+        draw = {
+          columns = {
+            { "label",     "label_description", gap = 1 },
+            { "kind_icon", "kind" }
+          },
+        }
+      },
+      ghost_text = { enabled = true },
     },
 
+
+    fuzzy = { implementation = "prefer_rust_with_warning" },
     snippets = {
       expand = function(snippet)
         vim.snippet.expand(snippet)
