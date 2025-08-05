@@ -60,7 +60,7 @@ if success then
           columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
         }
       },
-      ghost_text = { enabled = true },
+      ghost_text = { enabled = false },
     },
 
 
