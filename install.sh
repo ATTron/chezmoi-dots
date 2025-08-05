@@ -15,4 +15,4 @@ echo "Creating directory for chezmoi state..."
 mkdir -p ~/.local/share/chezmoi
 
 echo "Initializing chezmoi from Git repository..."
-chezmoi init --apply .
+chezmoi init --apply git@github.com:ATTron/chezmoi-dots.git
