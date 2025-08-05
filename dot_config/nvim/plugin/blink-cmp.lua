@@ -49,7 +49,6 @@ function in_treesitter_capture(capture)
   return false
 end
 
-
 if success then
   require('blink.cmp').setup({
     keymap = {
@@ -92,7 +91,7 @@ if success then
       },
       menu = {
         auto_show = function()
-          return not require("luasnip").expand_or_jumpable() and not in_treesitter_capture({"comment", "string"})
+          return not require("luasnip").expand_or_jumpable() and not in_treesitter_capture({ "comment", "string" })
         end,
         -- auto_show = true,
         draw = {
