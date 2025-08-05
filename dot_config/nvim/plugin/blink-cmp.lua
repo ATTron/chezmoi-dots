@@ -57,10 +57,7 @@ if success then
       menu = {
         auto_show = true,
         draw = {
-          columns = {
-            { "label",     "label_description", gap = 1 },
-            { "kind_icon", "kind" }
-          },
+          columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
         }
       },
       ghost_text = { enabled = true },
