@@ -5,6 +5,7 @@ Personal dotfiles managed with [chezmoi](https://chezmoi.io/).
 ## What's included
 
 - **Neovim** - Lua configuration with modern plugins
+- **Emacs** - Basic setup using straight.el package manager
 - **Tmux** - With TPM and useful plugins
 - **Zsh** - Zinit plugin manager and custom aliases
 - **Sway/Hyprland/River** - Wayland compositor configs
