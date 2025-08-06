@@ -59,7 +59,7 @@
 
 ;; Font configuration (only in GUI mode)
 (when (display-graphic-p)
-  (set-face-attribute 'default nil :font "Fira Code" :height 120))
+  (set-face-attribute 'default nil :font "Berkeley Mono" :height 120))
 
 ;; Evil mode - Vim keybindings
 (use-package evil
@@ -167,7 +167,7 @@
 
 ;; Doom themes - Nice looking themes
 (use-package doom-themes
-  :init (load-theme 'doom-one t))
+  :init (load-theme 'doom-gruvbox-light t))
 
 ;; Doom modeline - Better modeline (alternative: comment out if issues persist)
 (use-package doom-modeline
