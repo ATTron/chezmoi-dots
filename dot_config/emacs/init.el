@@ -1,458 +1,380 @@
-;;; init.el --- Basic Emacs configuration with Evil mode and straight.el
+;;; init.el --- Emacs Configuration -*- lexical-binding: t -*-
 
-;;; Commentary:
-;; A minimal Emacs configuration using straight.el for package management
-;; and Evil mode for Vim keybindings
+;; === ELPACA BOOTSTRAP (Version 0.11) ===
+(defvar elpaca-installer-version 0.11)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo   (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build  (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order  (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (<= emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-;;; Code:
+;; === USE-PACKAGE INTEGRATION ===
+(elpaca elpaca-use-package
+  (elpaca-use-package-mode))
 
-;; Bootstrap straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;; === CORE EMACS SETTINGS ===
+(use-package emacs
+  :ensure nil
+  :init
+  ;; Performance settings
+  (setq gc-cons-threshold (* 100 1024 1024))  ; 100MB
+  (setq read-process-output-max (* 4 1024 1024))  ; 4MB for LSP
+  
+  ;; Basic settings
+  (setq user-full-name "Your Name"
+        user-mail-address "your@email.com"
+        ring-bell-function 'ignore
+        use-short-answers t)
+  
+  ;; Modern defaults
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (global-auto-revert-mode 1)
+  (save-place-mode 1)
+  (savehist-mode 1)
+  (recentf-mode 1)
+  
+  :config
+  ;; Font configuration
+  (set-face-attribute 'default nil :font "Berkeley Mono-14")
+  (set-face-attribute 'fixed-pitch nil :font "Berkeley Mono-14")
+  
+  ;; Custom file location
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file)))
 
-;; Configure straight.el to use use-package
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
-
-;; Use built-in org-mode to avoid installation issues
-(setq straight-built-in-pseudo-packages '(org))
-
-;; Basic Emacs settings
-(setq inhibit-startup-message t)        ; Disable startup screen
-
-;; Disable GUI elements (with guards for terminal/minimal builds)
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))                 ; Disable visible scrollbar
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))                   ; Disable the toolbar
-(when (fboundp 'tooltip-mode)
-  (tooltip-mode -1))                    ; Disable tooltips
-(when (fboundp 'set-fringe-mode)
-  (set-fringe-mode 10))                 ; Give some breathing room
-(when (fboundp 'menu-bar-mode)
-  (menu-bar-mode -1))                   ; Disable the menu bar
-
-;; Set up the visible bell
-(setq visible-bell t)
-
-;; Line numbers
-(column-number-mode)
-(global-display-line-numbers-mode t)
-(setq display-line-numbers-type 'relative)
-
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-;; Font configuration (only in GUI mode)
-(when (display-graphic-p)
-  (set-face-attribute 'default nil :font "Berkeley Mono" :height 120))
-
-;; Evil mode - Vim keybindings
+;; === EVIL MODE (VIM KEYBINDINGS) ===
 (use-package evil
+  :ensure t
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
+  (setq evil-undo-system 'undo-redo)
   :config
   (evil-mode 1)
   
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
+  
+  ;; Set initial state for some modes
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
-;; Evil collection - Evil bindings for other modes
 (use-package evil-collection
+  :ensure t
   :after evil
   :config
   (evil-collection-init))
 
-;; Which-key - Shows available keybindings
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
+(use-package evil-commentary
+  :ensure t
+  :after evil
   :config
-  (setq which-key-idle-delay 1))
+  (evil-commentary-mode))
 
-;; Ivy - Completion framework
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
+(use-package evil-surround
+  :ensure t
+  :after evil
   :config
-  (ivy-mode 1))
+  (global-evil-surround-mode 1))
 
-;; Counsel - Enhanced commands using Ivy
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)))
-
-;; Ivy-rich - Better descriptions in Ivy
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-
-;; Helpful - Better help buffers
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
-
-;; General - Better keybinding management
+;; === GENERAL KEY BINDINGS (LEADER KEY) ===
 (use-package general
+  :ensure t
+  :after evil
   :config
-  (general-create-definer my/leader-keys
+  (general-evil-setup)
+  
+  ;; Set up SPC as the leader key
+  (general-create-definer my-leader-def
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"
     :global-prefix "C-SPC")
-
-  (my/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")
-    "tn" '(display-line-numbers-mode :which-key "toggle line numbers")
+  
+  ;; File operations
+  (my-leader-def
+    ;; Files
     "f"  '(:ignore t :which-key "files")
-    "ff" '(counsel-find-file :which-key "find file")
-    "fr" '(counsel-recentf :which-key "recent files")
+    "ff" '(find-file :which-key "find file")
+    "fr" '(recentf-open-files :which-key "recent files")
+    "fs" '(save-buffer :which-key "save file")
+    "fS" '(save-some-buffers :which-key "save all files")
+    
+    ;; Search
+    "s"  '(:ignore t :which-key "search")
+    "sf" '(project-find-file :which-key "search project files")
+    "sF" '(find-file :which-key "search all files")
+    "sg" '(project-find-regexp :which-key "grep in project")
+    "sr" '(recentf-open-files :which-key "search recent files")
+    "sb" '(switch-to-buffer :which-key "switch buffer")
+    
+    ;; Buffers
     "b"  '(:ignore t :which-key "buffers")
-    "bb" '(counsel-ibuffer :which-key "switch buffer")
-    "bd" '(kill-current-buffer :which-key "kill buffer")
-    "o"  '(:ignore t :which-key "org")
-    "oa" '(org-agenda :which-key "agenda")
-    "oc" '(org-capture :which-key "capture")
-    "ol" '(org-store-link :which-key "store link")
-    "ot" '(org-todo :which-key "cycle todo")
-    "ox" '(org-toggle-checkbox :which-key "toggle checkbox")
-    "os" '(org-schedule :which-key "schedule")
-    "od" '(org-deadline :which-key "deadline")
-    "l"  '(:ignore t :which-key "lsp")
-    "lr" '(lsp-rename :which-key "rename")
-    "lf" '(lsp-format-buffer :which-key "format")
-    "la" '(lsp-execute-code-action :which-key "code action")
-    "ld" '(lsp-find-definition :which-key "find definition")
-    "lD" '(lsp-find-declaration :which-key "find declaration")
-    "li" '(lsp-find-implementation :which-key "find implementation")
-    "lt" '(lsp-find-type-definition :which-key "find type definition")
-    "lu" '(lsp-find-references :which-key "find references")
-    "le" '(lsp-treemacs-errors-list :which-key "errors list")
-    "lR" '(lsp-restart-workspace :which-key "restart workspace")
+    "bb" '(switch-to-buffer :which-key "switch buffer")
+    "bd" '(kill-current-buffer :which-key "delete buffer")
+    "bn" '(next-buffer :which-key "next buffer")
+    "bp" '(previous-buffer :which-key "previous buffer")
+    "br" '(revert-buffer :which-key "revert buffer")
+    
+    ;; Project
+    "p"  '(:ignore t :which-key "project")
+    "pf" '(project-find-file :which-key "find file in project")
+    "pp" '(project-switch-project :which-key "switch project")
+    "pb" '(project-switch-to-buffer :which-key "switch to project buffer")
+    "pg" '(project-find-regexp :which-key "grep in project")
+    
+    ;; Git
+    "g"  '(:ignore t :which-key "git")
+    "gg" '(magit-status :which-key "magit status")
+    "gb" '(magit-blame :which-key "git blame")
+    "gl" '(magit-log :which-key "git log")
+    
+    ;; Window management
+    "w"  '(:ignore t :which-key "windows")
+    "wv" '(split-window-right :which-key "split vertical")
+    "ws" '(split-window-below :which-key "split horizontal")
+    "wd" '(delete-window :which-key "delete window")
+    "wh" '(evil-window-left :which-key "window left")
+    "wj" '(evil-window-down :which-key "window down")
+    "wk" '(evil-window-up :which-key "window up")
+    "wl" '(evil-window-right :which-key "window right")
+    
+    ;; Help
     "h"  '(:ignore t :which-key "help")
-    "hf" '(counsel-describe-function :which-key "describe function")
-    "hv" '(counsel-describe-variable :which-key "describe variable")
-    "hk" '(helpful-key :which-key "describe key")))
+    "hf" '(describe-function :which-key "describe function")
+    "hv" '(describe-variable :which-key "describe variable")
+    "hk" '(describe-key :which-key "describe key")
+    "hm" '(describe-mode :which-key "describe mode")
+    
+    ;; Toggle
+    "t"  '(:ignore t :which-key "toggle")
+    "tn" '(display-line-numbers-mode :which-key "line numbers")
+    "tw" '(whitespace-mode :which-key "whitespace")
+    "tt" '(load-theme :which-key "choose theme")
+    
+    ;; Quit
+    "q"  '(:ignore t :which-key "quit")
+    "qq" '(save-buffers-kill-emacs :which-key "quit emacs")
+    "qr" '(restart-emacs :which-key "restart emacs")))
 
-;; Doom themes - Nice looking themes
-(use-package doom-themes
-  :init (load-theme 'doom-gruvbox t))
+;; === THEME ===
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox-dark-medium t))
 
-;; Doom modeline - Better modeline (alternative: comment out if issues persist)
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom 
-  ((doom-modeline-height 15)
-   (doom-modeline-icon nil)           ; Disable all icons
-   (doom-modeline-major-mode-icon nil) ; Disable major mode icons
-   (doom-modeline-buffer-state-icon nil))) ; Disable buffer state icons
+;; === ICONS ===
+;; Compat is required for nerd-icons-completion
+(use-package compat
+  :ensure t
+  :demand t)
 
-;; Alternative simple modeline (uncomment if doom-modeline still has issues)
-;; (setq-default mode-line-format
-;;               '("%e" mode-line-front-space mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
-;;                 (vc-mode vc-mode)
-;;                 "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
-
-;; All-the-icons - Icon fonts for doom-modeline
-(use-package all-the-icons
-  :if (display-graphic-p))
-
-;; Rainbow delimiters - Colorful parentheses
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;; Projectile - Project management
-(use-package projectile
-  :diminish projectile-mode
-  :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :init
-  (when (file-directory-p "~/projects")
-    (setq projectile-project-search-path '("~/projects")))
-  (setq projectile-switch-project-action #'projectile-dired))
-
-;; Counsel-projectile - Ivy integration for Projectile
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
-
-;; Magit - Git interface
-(use-package magit
+(use-package nerd-icons
+  :ensure t
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (nerd-icons-font-family "Symbols Nerd Font Mono")
+  :config
+  ;; Install fonts if needed
+  (when (and (display-graphic-p)
+             (not (font-installed-p nerd-icons-font-family)))
+    (nerd-icons-install-fonts t)))
 
-;; Company - Code completion
-(use-package company
-  :hook ((prog-mode . company-mode)
-         (org-mode . company-mode))
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection)
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.2)
-  (company-selection-wrap-around t)
-  (company-tooltip-align-annotations t)
-  (company-tooltip-flip-when-above t)
-  (company-show-quick-access t))
+(use-package nerd-icons-dired
+  :ensure t
+  :hook (dired-mode . nerd-icons-dired-mode))
 
-;; Company-box - Better company UI with icons
-(use-package company-box
-  :hook (company-mode . company-box-mode)
-  :custom
-  (company-box-max-candidates 50)
-  (company-box-icons-alist 'company-box-icons-all-the-icons)
-  (company-box-backends-colors nil)
-  (company-box-show-single-candidate t))
+(use-package nerd-icons-completion
+  :ensure t
+  :after (marginalia compat)
+  :config (nerd-icons-completion-mode))
 
-;; LSP Mode - Language Server Protocol
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((python-ts-mode . lsp-deferred)
-         (js-ts-mode . lsp-deferred)
-         (typescript-ts-mode . lsp-deferred)
-         (rust-ts-mode . lsp-deferred)
-         (go-ts-mode . lsp-deferred)
-         (c-ts-mode . lsp-deferred)
-         (c++-ts-mode . lsp-deferred)
-         (java-ts-mode . lsp-deferred)
-         (css-ts-mode . lsp-deferred)
-         (html-mode . lsp-deferred)
-         (json-ts-mode . lsp-deferred)
-         (yaml-ts-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :custom
-  (lsp-completion-provider :company-capf)
-  (lsp-idle-delay 0.1)
-  (lsp-log-io nil)  ; Disable logging for performance
-  (lsp-restart 'auto-restart)
-  (lsp-enable-snippet t)
-  (lsp-keep-workspace-alive nil)
-  (lsp-auto-guess-root t)
-  (lsp-enable-file-watchers nil)  ; Disable for performance
-  (lsp-enable-folding t)
-  (lsp-enable-imenu t)
-  (lsp-enable-indentation t)
-  (lsp-enable-on-type-formatting t)
-  (lsp-signature-auto-activate t)
-  (lsp-signature-render-documentation t)
-  (lsp-eldoc-enable-hover t)
-  (lsp-modeline-code-actions-enable t)
-  (lsp-modeline-diagnostics-enable t)
-  (lsp-headerline-breadcrumb-enable t)
-  (lsp-semantic-tokens-enable t)
-  (lsp-enable-text-document-color t)
-  (lsp-progress-via-spinner nil)
-  (lsp-completion-show-detail t)
-  (lsp-completion-show-kind t))
-
-;; LSP UI - Better LSP interface
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-;; LSP Treemacs - File explorer integration
-(use-package lsp-treemacs
-  :after lsp)
-
-;; LSP Ivy - Ivy integration for LSP
-(use-package lsp-ivy)
-
-;; Tree-sitter configuration
+;; === TREE-SITTER AUTOMATIC SETUP ===
 (use-package treesit-auto
+  :ensure t
   :custom
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; Additional tree-sitter languages (optional)
-(use-package tree-sitter-langs
-  :after tree-sitter)
-
-;; Org Mode configuration
-(use-package org
-  :straight nil  ; Use built-in org-mode
-  :hook (org-mode . org-indent-mode)
+;; === LSP MODE WITH AUTOMATIC LANGUAGE SERVER SETUP ===
+(use-package lsp-mode
+  :ensure t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((python-ts-mode . lsp-deferred)
+         (rust-mode . lsp-deferred)
+         (go-mode . lsp-deferred)
+         (typescript-ts-mode . lsp-deferred)
+         (js-ts-mode . lsp-deferred)
+         (c-ts-mode . lsp-deferred)
+         (c++-ts-mode . lsp-deferred)
+         (java-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred)
   :config
-  (setq org-ellipsis " ▾")
-  
-  ;; Org agenda files
-  (setq org-agenda-files
-        '("~/org/tasks.org"
-          "~/org/habits.org"
-          "~/org/birthdays.org"))
-  
-  ;; TODO keywords
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-  
-  ;; Org capture templates
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("j" "Journal" entry (file+datetree "~/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")))
-  
-  ;; Org babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (shell . t)
-     (js . t)
-     (typescript . t)))
-  
-  ;; Don't prompt before evaluating code blocks
-  (setq org-confirm-babel-evaluate nil)
-  
-  ;; Hide emphasis markers (like *bold* and /italic/)
-  (setq org-hide-emphasis-markers t)
-  
-  ;; Better list bullets
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  
-  ;; Archive location
-  (setq org-archive-location "~/org/archive.org::datetree/")
-  
-  ;; Enable tree-sitter for code blocks in org-mode
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t))
+  ;; Performance optimizations
+  (setq lsp-use-plists t                    ; Better performance
+        lsp-log-io nil                      ; Disable logging
+        lsp-idle-delay 0.500               ; Reduce update frequency
+        lsp-completion-provider :none       ; Use external completion
+        lsp-eldoc-render-all nil
+        lsp-signature-render-documentation nil
+        
+        ;; File watching
+        lsp-file-watch-threshold 2000
+        lsp-file-watch-ignored-directories
+        '("[/\\\\]\\.git\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'"
+          "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'"
+          "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'"
+          "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules"
+          "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'"
+          "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'"
+          "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'"
+          "[/\\\\]\\.metals\\'" "[/\\\\]target\\'"
+          "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'"
+          "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'"
+          "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'")))
 
-;; Org modern - Better looking org mode with icons
-(use-package org-modern
-  :after org
-  :hook ((org-mode . org-modern-mode)
-         (org-agenda-finalize . org-modern-agenda))
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
   :custom
-  (org-modern-keyword nil)
-  (org-modern-checkbox nil)
-  (org-modern-table nil))
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-position 'bottom)
+  (lsp-ui-flycheck-enable t)
+  (lsp-ui-sideline-show-hover nil))
 
-;; Evil-org - Better Evil integration with org-mode
-(use-package evil-org
-  :after org
-  :hook (org-mode . (lambda () evil-org-mode))
+;; === ORG MODE WITH PRETTY ICONS AND BULLETS ===
+(use-package org
+  :ensure nil  ; Built-in
+  :hook ((org-mode . org-indent-mode)
+         (org-mode . visual-line-mode))
+  :custom
+  (org-hide-emphasis-markers t)
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
   :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
+  ;; Better org defaults
+  (setq org-ellipsis " ▾"
+        org-log-done 'time
+        org-log-into-drawer t))
+
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  ;; Bullet styles
+  (org-superstar-headline-bullets-list '("◉" "○" "▷" "▶" "◆" "▲" "■"))
+  (org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦) (?* . ?◆)))
   
-  ;; Add custom keybindings for org-mode
-  (evil-define-key 'normal org-mode-map
-    (kbd "RET") (lambda () 
-                  (interactive)
-                  (cond 
-                   ;; Check if we're on a line with checkbox syntax (anywhere on the line)
-                   ((save-excursion 
-                      (beginning-of-line)
-                      (re-search-forward "\\[[ X]\\]" (line-end-position) t))
-                    (org-toggle-checkbox))
-                   ;; If on a heading with TODO keyword, cycle TODO
-                   ((and (org-at-heading-p) (org-get-todo-state))
-                    (org-todo))
-                   ;; Default behavior
-                   (t (org-return))))
-    (kbd "TAB") 'org-cycle ; Tab for folding
-    (kbd "S-TAB") 'org-shifttab) ; Shift-Tab for global cycling
+  ;; TODO bullets
+  (org-superstar-special-todo-items t)
+  (org-superstar-todo-bullet-alist '(("TODO" . ?⚡)
+                                      ("NEXT" . ?⚡)  
+                                      ("HOLD" . ?⚬)
+                                      ("DONE" . ?✓)))
   
-  ;; Make sure evil-org knows about these keys
-  (add-to-list 'evil-org-key-theme 'todo))
+  ;; Clean leading stars
+  (org-superstar-leading-bullet ?\s)
+  (org-superstar-leading-fallback ?\s)
+  
+  :config
+  ;; Performance for large files
+  (setq inhibit-compacting-font-caches t))
 
-;; Org-roam - Zettelkasten note-taking (optional)
-;; Uncomment if you want to use org-roam for linked notes
-;; (use-package org-roam
-;;   :custom
-;;   (org-roam-directory (file-truename "~/org-roam/"))
-;;   :bind (("C-c n l" . org-roam-buffer-toggle)
-;;          ("C-c n f" . org-roam-node-find)
-;;          ("C-c n g" . org-roam-graph)
-;;          ("C-c n i" . org-roam-node-insert)
-;;          ("C-c n c" . org-roam-capture))
-;;   :config
-;;   (org-roam-db-autosync-mode))
+;; === MAGIT FOR GIT INTEGRATION ===
+;; Ensure transient is loaded with correct version first
+(use-package transient
+  :ensure (:wait t)
+  :demand t)
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(use-package magit
+  :ensure (:wait t)
+  :after transient
+  :bind (("C-x g" . magit-status)
+         ("C-x G" . magit-status))
+  :custom
+  (magit-diff-refine-hunk t)
+  (magit-repository-directories '(("~/projects" . 2)))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; Basic editing improvements
-(setq-default tab-width 2)
-(setq-default evil-shift-width tab-width)
-(setq-default indent-tabs-mode nil)
+;; === COMPLETION FRAMEWORK ===
+(use-package vertico
+  :ensure t
+  :init (vertico-mode))
 
-;; Enable tree-sitter based modes automatically
-(setq major-mode-remap-alist
-      '((yaml-mode . yaml-ts-mode)
-        (bash-mode . bash-ts-mode)
-        (js2-mode . js-ts-mode)
-        (typescript-mode . typescript-ts-mode)
-        (json-mode . json-ts-mode)
-        (css-mode . css-ts-mode)
-        (python-mode . python-ts-mode)
-        (rust-mode . rust-ts-mode)
-        (c-mode . c-ts-mode)
-        (c++-mode . c++-ts-mode)
-        (java-mode . java-ts-mode)
-        (go-mode . go-ts-mode)
-        (dockerfile-mode . dockerfile-ts-mode)))
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode))
 
-;; Backup files
-(setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; Auto-save
-(setq auto-save-list-file-prefix (expand-file-name "tmp/auto-saves/sessions/" user-emacs-directory)
-      auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/auto-saves/" user-emacs-directory) t)))
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  :init
+  (global-corfu-mode))
 
-;; Create directories if they don't exist
-(make-directory (expand-file-name "tmp/auto-saves/" user-emacs-directory) t)
-(make-directory (expand-file-name "tmp/backups/" user-emacs-directory) t)
+;; === HELPFUL UI PACKAGES ===
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; === FINAL OPTIMIZATIONS ===
+(add-hook 'elpaca-after-init-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 16 1024 1024))
+            (message "Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time (time-subtract (current-time) before-init-time)))
+                     gcs-done)))
 
 ;;; init.el ends here
