@@ -160,6 +160,17 @@
     "ox" '(org-toggle-checkbox :which-key "toggle checkbox")
     "os" '(org-schedule :which-key "schedule")
     "od" '(org-deadline :which-key "deadline")
+    "l"  '(:ignore t :which-key "lsp")
+    "lr" '(lsp-rename :which-key "rename")
+    "lf" '(lsp-format-buffer :which-key "format")
+    "la" '(lsp-execute-code-action :which-key "code action")
+    "ld" '(lsp-find-definition :which-key "find definition")
+    "lD" '(lsp-find-declaration :which-key "find declaration")
+    "li" '(lsp-find-implementation :which-key "find implementation")
+    "lt" '(lsp-find-type-definition :which-key "find type definition")
+    "lu" '(lsp-find-references :which-key "find references")
+    "le" '(lsp-treemacs-errors-list :which-key "errors list")
+    "lR" '(lsp-restart-workspace :which-key "restart workspace")
     "h"  '(:ignore t :which-key "help")
     "hf" '(counsel-describe-function :which-key "describe function")
     "hv" '(counsel-describe-variable :which-key "describe variable")
@@ -167,7 +178,7 @@
 
 ;; Doom themes - Nice looking themes
 (use-package doom-themes
-  :init (load-theme 'doom-gruvbox-light t))
+  :init (load-theme 'doom-gruvbox t))
 
 ;; Doom modeline - Better modeline (alternative: comment out if issues persist)
 (use-package doom-modeline
@@ -215,27 +226,71 @@
 
 ;; Company - Code completion
 (use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
+  :hook ((prog-mode . company-mode)
+         (org-mode . company-mode))
   :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
+         ("<tab>" . company-complete-selection)
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous))
   :custom
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (company-idle-delay 0.2)
+  (company-selection-wrap-around t)
+  (company-tooltip-align-annotations t)
+  (company-tooltip-flip-when-above t)
+  (company-show-quick-access t))
 
-;; Company-box - Better company UI
+;; Company-box - Better company UI with icons
 (use-package company-box
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+  :custom
+  (company-box-max-candidates 50)
+  (company-box-icons-alist 'company-box-icons-all-the-icons)
+  (company-box-backends-colors nil)
+  (company-box-show-single-candidate t))
 
 ;; LSP Mode - Language Server Protocol
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :config
-  (lsp-enable-which-key-integration t))
+  :hook ((python-ts-mode . lsp-deferred)
+         (js-ts-mode . lsp-deferred)
+         (typescript-ts-mode . lsp-deferred)
+         (rust-ts-mode . lsp-deferred)
+         (go-ts-mode . lsp-deferred)
+         (c-ts-mode . lsp-deferred)
+         (c++-ts-mode . lsp-deferred)
+         (java-ts-mode . lsp-deferred)
+         (css-ts-mode . lsp-deferred)
+         (html-mode . lsp-deferred)
+         (json-ts-mode . lsp-deferred)
+         (yaml-ts-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-completion-provider :company-capf)
+  (lsp-idle-delay 0.1)
+  (lsp-log-io nil)  ; Disable logging for performance
+  (lsp-restart 'auto-restart)
+  (lsp-enable-snippet t)
+  (lsp-keep-workspace-alive nil)
+  (lsp-auto-guess-root t)
+  (lsp-enable-file-watchers nil)  ; Disable for performance
+  (lsp-enable-folding t)
+  (lsp-enable-imenu t)
+  (lsp-enable-indentation t)
+  (lsp-enable-on-type-formatting t)
+  (lsp-signature-auto-activate t)
+  (lsp-signature-render-documentation t)
+  (lsp-eldoc-enable-hover t)
+  (lsp-modeline-code-actions-enable t)
+  (lsp-modeline-diagnostics-enable t)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-semantic-tokens-enable t)
+  (lsp-enable-text-document-color t)
+  (lsp-progress-via-spinner nil)
+  (lsp-completion-show-detail t)
+  (lsp-completion-show-kind t))
 
 ;; LSP UI - Better LSP interface
 (use-package lsp-ui
@@ -249,6 +304,18 @@
 
 ;; LSP Ivy - Ivy integration for LSP
 (use-package lsp-ivy)
+
+;; Tree-sitter configuration
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+;; Additional tree-sitter languages (optional)
+(use-package tree-sitter-langs
+  :after tree-sitter)
 
 ;; Org Mode configuration
 (use-package org
@@ -279,7 +346,9 @@
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
-     (shell . t)))
+     (shell . t)
+     (js . t)
+     (typescript . t)))
   
   ;; Don't prompt before evaluating code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -293,7 +362,11 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
   
   ;; Archive location
-  (setq org-archive-location "~/org/archive.org::datetree/"))
+  (setq org-archive-location "~/org/archive.org::datetree/")
+  
+  ;; Enable tree-sitter for code blocks in org-mode
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t))
 
 ;; Org modern - Better looking org mode with icons
 (use-package org-modern
@@ -354,6 +427,22 @@
 (setq-default tab-width 2)
 (setq-default evil-shift-width tab-width)
 (setq-default indent-tabs-mode nil)
+
+;; Enable tree-sitter based modes automatically
+(setq major-mode-remap-alist
+      '((yaml-mode . yaml-ts-mode)
+        (bash-mode . bash-ts-mode)
+        (js2-mode . js-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (json-mode . json-ts-mode)
+        (css-mode . css-ts-mode)
+        (python-mode . python-ts-mode)
+        (rust-mode . rust-ts-mode)
+        (c-mode . c-ts-mode)
+        (c++-mode . c++-ts-mode)
+        (java-mode . java-ts-mode)
+        (go-mode . go-ts-mode)
+        (dockerfile-mode . dockerfile-ts-mode)))
 
 ;; Backup files
 (setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
