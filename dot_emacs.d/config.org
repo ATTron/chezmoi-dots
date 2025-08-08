@@ -1,0 +1,484 @@
+#+TITLE: Custom emacs config
+#+AUTHOR: Anthony Templeton
+#+DESCRIPTION: Personal emacs config
+#+STARTUP: showeverything
+#+OPTIONS: toc:3
+
+* Table of contents :toc:
+- [[#packages][Packages]]
+  - [[#elpaca-package-manager][elpaca package manager]]
+  - [[#evil-mode][evil mode]]
+  - [[#keybindings][keybindings]]
+- [[#general-settings][General Settings]]
+  - [[#org-mode-specific][org mode specific]]
+  - [[#line-numbers][line numbers]]
+  - [[#theme-setup][theme setup]]
+  - [[#better-defaults][better defaults]]
+- [[#fonts][Fonts]]
+  - [[#setup-fonts][setup fonts]]
+- [[#which-key][Which Key]]
+- [[#custom-functions][Custom Functions]]
+- [[#post-eval-setup][Post eval setup]]
+  - [[#paste-with-p][paste with 'p']]
+- [[#nerd-icons][Nerd Icons]]
+- [[#doom-modeline][Doom Modeline]]
+- [[#vertico][Vertico]]
+- [[#consult][Consult]]
+- [[#lsp][LSP]]
+  - [[#lsp-mode--lsp-ui][lsp-mode + lsp-ui]]
+  - [[#program-language-specific][program language specific]]
+  - [[#completions][completions]]
+- [[#rainbow-delimiters][Rainbow Delimiters]]
+
+* Packages
+** elpaca package manager
+
+#+begin_src emacs-lisp
+  (defvar elpaca-installer-version 0.11)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil :depth 1 :inherit ignore
+                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (<= emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                    ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                    ,@(when-let* ((depth (plist-get order :depth)))
+                                                        (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                    ,(plist-get order :repo) ,repo))))
+                    ((zerop (call-process "git" nil buffer t "checkout"
+                                          (or (plist-get order :ref) "--"))))
+                    (emacs (concat invocation-directory invocation-name))
+                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                    ((require 'elpaca))
+                    ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable use-package :ensure support for Elpaca.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified
+    (setq elpaca-use-package-by-default t))
+
+  (elpaca-wait)
+#+end_src
+
+** evil mode
+
+#+begin_src emacs-lisp
+ (use-package evil
+   :ensure t
+   :init
+   (setq evil-want-integration t)
+   (setq evil-want-keybinding nil)
+   (setq evil-vsplit-window-right t)
+   (setq evil-split-window-below t)
+   :config
+   (evil-mode 1))
+
+ (use-package evil-collection
+   :after evil
+   :ensure t
+   :config
+   (setq evil-collection-mode-list '(dashboard dired ibuffer))
+   (evil-collection-init))
+
+(setq evil-ex-completion-style 'basic)
+#+end_src
+
+** keybindings
+
+#+begin_src emacs-lisp
+(use-package general
+  :ensure (:wait t)
+  :demand t
+  :config
+  (general-evil-setup)
+
+  ;; setup 'SPC' as leader key
+  (general-create-definer at/leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC"
+    :global-prefix "M-SPC")
+
+  ;; misc operations
+  (at/leader-keys
+  "gc" '(comment-line :wk "Comment Lines")
+  "sc" '(,(lambda () (interactive) (find-file "~/.emacs.d/config.org")) :wk "Edit emacs config")
+  "K"  '(lsp-ui-doc-show :wk "Show documentation"))
+
+  ;; buffer operations
+  (at/leader-keys
+    "b" '(:ignore t :wk "buffer")
+    "bb" '(switch-to-buffer :wk "Switch buffer")
+    "bi" '(ibuffer :wk "Ibuffer")
+    "bk" '(kill-this-buffer :wk "Kill this buffer")
+    "bn" '(next-buffer :wk "Next buffer")
+    "bp" '(previous-buffer :wk "Previous buffer")
+    "br" '(revert-buffer :wk "Reload buffer"))
+
+  ;; file operations
+  (at/leader-keys
+    "s" '(:ignore t :wk "files")
+    "sf" '(find-file :wk "find file")
+    "ss" '(save-buffer :wk "save file")
+    "sS" '(save-some-buffers :wk "save all")
+    "sP" '(project-find-file :wk "project find file")
+    "sd" '(dired :wk "dired")
+    "sD" '(dired-jump :wk "dired here"))
+
+  ;; evaluate operations
+  (at/leader-keys
+    "e" '(:ignore t :wk "Evaluate")
+    "eb" '(eval-buffer :wk "Evaluate elisp in buffer")
+    "ed" '(eval-defun :wk "Evaluate defun containing or after point")
+    "ee" '(eval-expression :wk "Evaluate elisp expression")
+    "el" '(eval-last-sexp :wk "Evaluate elisp expression before point")
+    "er" '(eval-region :wk "Evaluate elisp in region"))
+
+  ;; evaluate operations
+  (at/leader-keys
+      "h" '(:ignore t :wk "Help")
+      "hrr" '(reload-init-file :wk "Reload init.el"))
+)
+(global-set-key (kbd "C-u") #'scroll-up-half-page-and-center)
+(global-set-key (kbd "C-d") #'scroll-down-half-page-and-center)
+#+end_src
+
+* General Settings
+** org mode specific
+#+begin_src emacs-lisp
+(use-package toc-org
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
+
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-headline-bullets-list '("◉" "○" "▷" "▶" "◆" "▲" "■"))
+  (org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦) (?* . ?◆)))
+  (org-superstar-special-todo-items t)
+  (org-superstar-todo-bullet-alist '(("TODO" . ?⚡)
+                                      ("NEXT" . ?⚡)  
+                                      ("HOLD" . ?⚬)
+                                      ("DONE" . ?✓)))
+  (org-superstar-leading-bullet ?\s)
+  (org-superstar-leading-fallback ?\s))
+(electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
+
+(require 'org-tempo)  
+#+end_src
+
+** line numbers
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode 1)
+  (global-visual-line-mode t)
+#+end_src
+
+** theme setup
+#+begin_src emacs-lisp
+    (use-package gruvbox-theme
+        :config
+        (load-theme 'gruvbox-dark-soft t))
+#+end_src
+
+** better defaults
+#+begin_src emacs-lisp
+    ;; Better defaults
+    (setq-default tab-width 2)
+    (setq-default evil-shift-width tab-width)
+    (setq-default indent-tabs-mode nil)
+    (setq scroll-margin 5)
+    (setq scroll-conservatively 101)
+    (setq scroll-step 1)
+    (setq scroll-preserve-screen-position t)
+    (setq select-enable-clipboard t)
+    (setq select-enable-primary t)
+    (setq mouse-drag-copy-region t)
+    (setq x-select-enable-clipboard t)
+    (setq save-interprogram-paste-before-kill t)
+    (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+#end_src
+
+* Fonts
+** setup fonts
+
+#+begin_src emacs-lisp
+;;(set-face-attribute 'default nil :font "Berkeley Mono" :height 120)
+(when (display-graphic-p)
+    (set-face-attribute 'default nil
+                    :font "Berkeley Mono"
+                    :height 140))
+#+end_src
+
+* Which Key
+#+begin_src emacs-lisp
+(use-package which-key
+    :ensure t
+    :init
+    (which-key-mode 1)
+    :config
+    (setq which-key-side-window-location 'bottom
+        which-key-sort-order #'which-key-key-order-alpha
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
+        which-key-max-display-columns nil
+        which-key-max-display-lines 6
+        which-key-side-window-slot -10
+        which-key-side-window-max-height 0.25
+        which-key-idle-delay 0.6
+        which-key-max-description-length 25
+        which-key-allow-imprecise-window-fit t
+        which-key-enable-in-minibuffer nil
+        which-key-seperator " -> "))
+    (setq which-key-inhibit-regexps
+        '("\\`M-x\\'" ; Disable for M-x
+            "\\`:.*\\'")) ; Disable for Ex commands (Evil)
+#+end_src
+
+* Custom Functions
+#+begin_src emacs-lisp
+  (defun reload-init-file ()
+      "Reload the Emacs init file."
+      (interactive)
+      (load-file user-init-file)
+      (load-file user-init-file))
+
+  (defun scroll-down-half-page-and-center ()
+      "Scroll down half a page and center the cursor line."
+      (interactive)
+      (scroll-up-command (/ (window-body-height) 2))
+      (recenter))
+
+    (defun scroll-up-half-page-and-center ()
+        "Move point up half a page and recenter."
+        (interactive)
+        (let ((lines (/ (window-body-height) 2)))
+            (ignore-errors (forward-line (- lines))))
+        (recenter))
+#+end_src
+
+* Post eval setup
+** paste with 'p'
+#+begin_src emacs-lisp
+(with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "p") 'evil-paste-after))
+#+end_src
+
+* Nerd Icons
+#+begin_src emacs-lisp
+(use-package nerd-icons
+    :ensure t
+    :if (display-graphic-p))
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+* Doom Modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom 
+    ((doom-modeline-height 15)
+        ;; Enable icons in GUI mode, disable in terminal
+        (doom-modeline-icon (display-graphic-p))
+        (doom-modeline-major-mode-icon (display-graphic-p))
+        (doom-modeline-env-version (display-graphic-p))
+        (doom-modeline-buffer-state-icon (display-graphic-p))))
+#+end_src
+
+* Vertico
+#+begin_src emacs-lisp
+(use-package vertico
+    :init
+    (vertico-mode))
+#+end_src
+
+* Consult
+#+begin_src emacs-lisp
+(use-package consult
+  :ensure t
+  :bind (;; C-x bindings
+         ("C-x b" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("C-x 5 b" . consult-buffer-other-frame)
+         ("C-x r b" . consult-bookmark)
+         ("C-x p b" . consult-project-buffer)
+         ;; M-s bindings (search)
+         ("M-s d" . consult-find)
+         ("M-s D" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ;; Other bindings
+         ("M-y" . consult-yank-pop))
+  :config
+  (setq consult-narrow-key "<"))
+#+end_src
+
+* LSP
+** lsp-mode + lsp-ui
+#+begin_src emacs-lisp
+(use-package nvm
+  :ensure t
+  :config
+  (nvm-use "22"))
+
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (
+         (lua-mode . lsp)
+	 (rust-mode . lsp)
+	 (go-mode . lsp)
+	 (just-mode . lsp)
+	 (yaml-mode . lsp)
+	 (typescript-ts-mode . lsp)
+	 (python-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp lsp-deferred)
+
+(use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :custom
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-position 'bottom)
+    (lsp-ui-doc-delay 0.2)
+    (lsp-ui-flycheck-enable t)
+    (lsp-ui-sideline-show-hover nil))
+
+(defun my/lsp-ui-doc-hide-on-move ()
+  (when (bound-and-true-p lsp-ui-doc-mode)
+    (lsp-ui-doc-hide)))
+
+(add-hook 'post-command-hook #'my/lsp-ui-doc-hide-on-move)
+#+end_src
+** program language specific
+#+begin_src emacs-lisp
+(use-package lua-mode)
+(use-package rust-mode)
+(use-package go-mode)
+(use-package just-mode)
+(use-package yaml-mode)
+(setq lsp-go-gopls-server-path (expand-file-name "~/go/bin/gopls"))
+
+
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+#+end_src
+** completions
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package corfu
+    :after lsp-mode
+    :ensure t
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-delay 0.1)
+    (corfu-auto-prefix 0)
+    (corfu-quit-no-match t)
+    (corfu-preview-current t)
+    (corfu-preselect 'prompt)
+    (corfu-on-exact-match nil)
+    (corfu-scroll-margin 5)
+  
+    :bind
+    (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)
+        ("RET" . corfu-insert)
+        ([return] . corfu-insert)
+        ("C-j" . corfu-next)
+        ("C-k" . corfu-previous))
+
+    :init
+    (global-corfu-mode)
+    (corfu-popupinfo-mode)
+
+    :config
+    (when (not (display-graphic-p))
+        (corfu-terminal-mode +1)))
+#+end_src
+*** Completion with icons
+#+begin_src emacs-lisp
+(use-package nerd-icons-corfu
+    :ensure t
+    :after corfu
+    :config
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+*** LSP Keybindings
+#+begin_src emacs-lisp
+(evil-define-key 'normal 'global
+    "gd" 'lsp-find-definition
+    "gr" 'lsp-find-references
+    "gi" 'lsp-find-implementation)
+#+end_src
+*** Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+    :ensure t
+    :defer t
+    :init (global-flycheck-mode))
+#+end_src
+*** Treesitter
+#+begin_src emacs-lisp
+;;(use-package treesit-auto
+;;  :custom
+;;  (treesit-auto-install 'prompt)
+;;  :config
+;;  (treesit-auto-add-to-auto-mode-alist 'all)
+;;  (global-treesit-auto-mode))
+
+;;(add-hook 'rust-ts-mode-hook #'lsp-deferred)
+;;(add-hook 'zig-ts-mode-hook  #'lsp-deferred)
+;;(add-hook 'go-ts-mode-hook  #'lsp-deferred)
+;;(add-hook 'python-ts-mode-hook  #'lsp-deferred)
+#+end_src
+
+* Rainbow Delimiters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
