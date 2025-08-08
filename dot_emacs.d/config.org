@@ -25,6 +25,7 @@
 - [[#vertico][Vertico]]
 - [[#consult][Consult]]
 - [[#lsp][LSP]]
+  - [[#setup-nvm-things][Setup nvm things]]
   - [[#lsp-mode--lsp-ui][lsp-mode + lsp-ui]]
   - [[#program-language-specific][program language specific]]
   - [[#completions][completions]]
@@ -346,13 +347,16 @@
 #+end_src
 
 * LSP
-** lsp-mode + lsp-ui
+** Setup nvm things
 #+begin_src emacs-lisp
 (use-package nvm
   :ensure t
   :config
   (nvm-use "22"))
+#+end_src
 
+** lsp-mode + lsp-ui
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -461,19 +465,11 @@
     :defer t
     :init (global-flycheck-mode))
 #+end_src
-*** Treesitter
+*** Snippets
 #+begin_src emacs-lisp
-;;(use-package treesit-auto
-;;  :custom
-;;  (treesit-auto-install 'prompt)
-;;  :config
-;;  (treesit-auto-add-to-auto-mode-alist 'all)
-;;  (global-treesit-auto-mode))
-
-;;(add-hook 'rust-ts-mode-hook #'lsp-deferred)
-;;(add-hook 'zig-ts-mode-hook  #'lsp-deferred)
-;;(add-hook 'go-ts-mode-hook  #'lsp-deferred)
-;;(add-hook 'python-ts-mode-hook  #'lsp-deferred)
+(use-package yasnippet
+    :ensure t
+    :init (yas-global-mode))
 #+end_src
 
 * Rainbow Delimiters
