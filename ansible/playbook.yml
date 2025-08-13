@@ -279,6 +279,15 @@
       environment:
         HOME: "{{ home_dir }}"
 
+    - name: Install pyright using node.js
+      shell: |
+        export NVM_DIR="{{ home_dir }}/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+        npm -g pyright
+      args:
+        executable: /bin/bash
+      become: no
+
     - name: Install uv package manager
       become: no
       shell: curl -LsSf https://astral.sh/uv/install.sh | sh
