@@ -283,7 +283,7 @@
       shell: |
         export NVM_DIR="{{ home_dir }}/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-        npm -g pyright
+        npm -i -g pyright
       args:
         executable: /bin/bash
       become: no
