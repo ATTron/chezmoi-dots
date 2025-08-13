@@ -8,7 +8,7 @@ local success = utils.ensure_plugin_built(
   'https://github.com/mistricky/codesnap.nvim.git',
   'codesnap.nvim',
   'make',
-  'lua/generator.so'
+  'lua/generator'
 )
 
 if success then
