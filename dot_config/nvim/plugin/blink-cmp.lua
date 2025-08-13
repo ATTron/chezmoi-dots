@@ -12,14 +12,14 @@ local success = utils.ensure_plugin_built(
   'https://github.com/L3MON4D3/LuaSnip',
   'LuaSnip',
   'make install_jsregexp',
-  'lua/luasnip-jsregexp.lua'
+  'lua/luasnip-jsregexp'
 )
 
 local success = utils.ensure_plugin_built(
-  'https://github.com/saghen/blink.cmp.git',
+  'https://github.com/saghen/blink.cmp',
   'blink.cmp',
   'cargo build --release',
-  'target/release/libblink_cmp_fuzzy.so'
+  'target/release/libblink_cmp_fuzzy'
 )
 
 function in_treesitter_capture(capture)
