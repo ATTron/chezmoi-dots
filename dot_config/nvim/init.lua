@@ -179,14 +179,6 @@ vim.pack.add({
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
 })
 
--- set colorscheme
-require("gruvbox").setup({
-  terminal_colors = true,
-  transparent_mode = true,
-})
-
-vim.cmd.colorscheme("gruvbox")
-
 -- setup plugins
 require("conform").setup({
   formatters_by_ft = {
@@ -205,7 +197,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- enable lsp
-vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "pyright", "clangd", "gopls" })
+vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls" })
 
 -- shell detection
 -- Auto-detect shell
