@@ -102,7 +102,14 @@ if success then
     },
 
 
-    fuzzy = { implementation = "prefer_rust_with_warning" },
+    fuzzy = {
+      implementation = "prefer_rust_with_warning",
+      sorts = {
+        'score',
+        'sort_text',
+        'label',
+      },
+    },
     snippets = {
       expand = function(snippet)
         vim.snippet.expand(snippet)
