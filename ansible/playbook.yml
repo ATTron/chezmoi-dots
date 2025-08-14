@@ -279,15 +279,6 @@
       environment:
         HOME: "{{ home_dir }}"
 
-    - name: Install pyright using node.js
-      shell: |
-        export NVM_DIR="{{ home_dir }}/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-        npm i -g pyright
-      args:
-        executable: /bin/bash
-      become: no
-
     - name: Install uv package manager
       become: no
       shell: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -302,6 +293,15 @@
         uv tool install ruff
       args:
         creates: "{{ home_dir }}/.local/bin/ruff"
+        executable: /bin/bash
+
+    - name: Install ty (python lsp)
+      become: no
+      shell: |
+        export PATH="$HOME/.local/bin:$PATH"
+        uv tool install ty
+      args:
+        creates: "{{ home_dir }}/.local/bin/ty"
         executable: /bin/bash
 
     - name: Install fzf
