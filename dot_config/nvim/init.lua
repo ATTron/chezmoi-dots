@@ -172,6 +172,7 @@ vim.diagnostic.config({
 
 -- packages
 vim.pack.add({
+  { src = "https://github.com/ellisonleao/gruvbox.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -195,6 +196,14 @@ require("nvim-treesitter.configs").setup({
   },
   indent = { enable = true },
 })
+
+-- set colorscheme
+require("gruvbox").setup({
+  terminal_colors = true,
+  transparent_mode = true,
+})
+vim.opt.background = "dark"
+vim.cmd([[colorscheme gruvbox]])
 
 -- enable lsp
 vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls" })
