@@ -11,21 +11,7 @@ require("snacks").setup({
   input = { enabled = false },
   lazygit = { enabled = false },
   picker = {
-    prompt = "🦆 ",
-    enabled = true,
-    formatters = {
-      file = {
-        truncate = 80,
-      },
-    },
-    win = {
-      input = {
-        keys = {
-          ["<Tab>"] = { "list_down", mode = { "n", "i" } },
-          ["<S-Tab>"] = { "list_up", mode = { "n", "i" } },
-        },
-      },
-    },
+    enabed = false,
   },
   notifier = { enabled = false },
   quickfile = { enabled = true },
@@ -66,4 +52,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- file picker
-vim.keymap.set("n", "<leader>sf", "<cmd>lua Snacks.picker.files({})<cr>")
+-- vim.keymap.set("n", "<leader>sf", "<cmd>lua Snacks.picker.files({})<cr>")
