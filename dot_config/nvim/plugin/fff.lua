@@ -20,11 +20,11 @@ if success then
       db_path = vim.fn.stdpath('cache') .. '/fff_nvim', -- Database location
     },
     layout = {
-      prompt_position = 'top',   -- Position of prompt ('top' or 'bottom')
-      preview_position = 'left', -- Position of preview ('right' or 'left')
-      preview_width = 0.4,       -- Width of preview pane
-      height = 0.8,              -- Window height
-      width = 0.8,               -- Window width
+      prompt_position = 'top',    -- Position of prompt ('top' or 'bottom')
+      preview_position = 'right', -- Position of preview ('right' or 'left')
+      preview_size = 0.5,
+      height = 0.8,               -- Window height
+      width = 0.8,                -- Window width
     },
     keymaps = {
       close = '<Esc>',
