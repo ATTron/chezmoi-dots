@@ -32,8 +32,8 @@ if success then
       select_split = '<C-s>',
       select_vsplit = '<C-v>',
       select_tab = '<C-t>',
-      move_up = { '<Tab>', '<C-p>' }, -- Multiple bindings supported
-      move_down = { '<S-Tab>', '<C-n>' },
+      move_up = { '<S-Tab>', '<C-n>' },
+      move_down = { '<Tab>', '<C-p>' }, -- Multiple bindings supported
       preview_scroll_up = '<C-u>',
       preview_scroll_down = '<C-d>',
       toggle_debug = '<F2>', -- Toggle debug scores display
