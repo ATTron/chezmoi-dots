@@ -246,6 +246,15 @@
         creates: "{{ home_dir }}/.cargo/bin/just"
         executable: /bin/bash
 
+    - name: Install typst
+      become: no
+      shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        cargo install --locked typst-cli
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/typst"
+        executable: /bin/bash
+
     - name: Install Neovim nightly using bob
       become: no
       shell: |
