@@ -178,6 +178,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+  { src = "https://github.com/chomosuke/typst-preview.nvim" },
 })
 
 -- setup plugins
@@ -206,7 +207,7 @@ vim.opt.background = "dark"
 vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
-vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls" })
+vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls", "tinymist" })
 
 
 -- shell detection
