@@ -22,5 +22,5 @@ if success then
     save_path = "~/Pictures/Code",
   })
 
-  vim.keymap.set("x", "cs", ":CodeSnapSave<CR>")
+  vim.keymap.set("x", "ss", ":CodeSnapSave<CR>")
 end
