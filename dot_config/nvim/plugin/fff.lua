@@ -40,5 +40,7 @@ if success then
     },
   })
 
-  vim.keymap.set("n", "<leader>sf", "<cmd>FFFFind<cr>")
+  vim.keymap.set("n", "<leader>sf", function()
+    require('fff').find_files()
+  end)
 end
