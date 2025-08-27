@@ -1,4 +1,25 @@
 local M = {}
+local prompts = {
+  "Whaddya Buyin'?",
+  "What're ya sellin'?",
+  "Hey, listen!",
+  "These aren't the droids...",
+  "I want to believe",
+  "Enhance!",
+  "404: File not found",
+  "What do your elf eyes see?",
+  "Looking for Waldo",
+  "Ctrl+F IRL",
+  "grep -r life .",
+  "Seeking truth in /dev/null",
+  "Live Mas 🌮"
+}
+
+function M.get_random_prompt()
+  math.randomseed(os.time())
+  return prompts[math.random(#prompts)]
+end
+
 function M.ensure_plugin_built(repo_url, plugin_name, build_cmd, build_check_file)
   local pack_path = vim.fn.stdpath('data') .. '/site/pack/core/opt'
   local plugin_path = pack_path .. '/' .. plugin_name
@@ -14,7 +35,8 @@ function M.ensure_plugin_built(repo_url, plugin_name, build_cmd, build_check_fil
   local dylib_file = base_path .. '.dylib'
   local lua_file = base_path .. '.lua'
 
-  local artifact_exists = vim.fn.filereadable(so_file) == 1 or vim.fn.filereadable(dylib_file) == 1 or vim.fn.filereadable(lua_file) == 1
+  local artifact_exists = vim.fn.filereadable(so_file) == 1 or vim.fn.filereadable(dylib_file) == 1 or
+      vim.fn.filereadable(lua_file) == 1
 
   if not artifact_exists then
     print('Building ' .. plugin_name .. '...')
@@ -31,4 +53,3 @@ function M.ensure_plugin_built(repo_url, plugin_name, build_cmd, build_check_fil
 end
 
 return M
-
