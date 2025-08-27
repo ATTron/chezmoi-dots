@@ -14,7 +14,7 @@ local success = utils.ensure_plugin_built(
 if success then
   require("fff").setup({
     prompt = '🦆 ',
-    title = 'Whaddya Buyin',
+    title = "Whaddya Buyin ?",
     frecency = {
       enabled = true,                                   -- Enable frecency tracking
       db_path = vim.fn.stdpath('cache') .. '/fff_nvim', -- Database location

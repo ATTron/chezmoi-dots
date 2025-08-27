@@ -12,6 +12,7 @@ local success = utils.ensure_plugin_built(
 )
 
 if success then
+  vim.cmd('packadd codesnap.nvim')
   require("codesnap").setup({
     has_breadcrumbs = true,
     code_font_family = "Berkeley Mono",
