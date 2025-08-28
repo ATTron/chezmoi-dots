@@ -7,7 +7,10 @@ if [ ! -d "$ZINIT_HOME" ]; then
   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-export SHELL="/usr/bin/zsh"
+if [[ -z "$SHELL" ]] || [[ "$SHELL" != *"zsh" ]]; then
+  SHELL_PATH=$(which zsh 2>/dev/null || echo "/bin/zsh")
+  export SHELL="$SHELL_PATH"
+fi
 export EDITOR="${HOME}/.local/share/bob/nvim-bin/nvim"
 export NNN_OPENER=$EDITOR
 
