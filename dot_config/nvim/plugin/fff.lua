@@ -12,6 +12,7 @@ local success = utils.ensure_plugin_built(
 )
 
 if success then
+  vim.cmd('packadd fff.nvim')
   require("fff").setup({
     prompt = '🦆 ',
     title = "Whaddya Buyin ?",
@@ -40,7 +41,5 @@ if success then
     },
   })
 
-  vim.keymap.set("n", "<leader>sf", function()
-    require('fff').find_files()
-  end)
+  vim.keymap.set("n", "<leader>sf", "<cmd>FFFFind<cr>")
 end
