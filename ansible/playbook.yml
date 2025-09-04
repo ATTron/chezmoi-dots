@@ -12,6 +12,7 @@
          or 'vscode' }}
     home_dir: "/home/{{ username }}"
     go_version: "1.24.5"
+    gleam_version: "v1.12.0"
 
   tasks:
     # -- SYSTEM SETUP (root) --
@@ -44,6 +45,7 @@
           - wl-clipboard
           - clangd-19
           - nnn
+          - erlang
         state: present
 
     - name: Create symlink for clangd
@@ -236,6 +238,21 @@
       args:
         creates: "{{ home_dir }}/.cargo/bin/bob"
         executable: /bin/bash
+
+    - name: Install beamup
+      become: no
+      shell: | 
+        export PATH="$HOME/.cargo/bin:$PATH"
+        curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tsloughter/beamup/releases/download/v0.6.0/beamup-installer.sh | sh
+      args:
+        creates: "{{ home_dir }}/.cargo/bin/beamup"
+        executable: /bin/bash
+
+    - name: Install gleam
+      become: no
+      shell: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        beamup install gleam {{ gleam_version }}
 
     - name: Install just (makefile alternative)
       become: no
