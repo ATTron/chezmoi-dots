@@ -253,6 +253,9 @@
       shell: |
         export PATH="$HOME/.cargo/bin:$PATH"
         beamup install gleam {{ gleam_version }}
+      args:
+        creates: "{{ home_dir }}/.local/bin/gleam"
+        executable: /bin/bash
 
     - name: Install just (makefile alternative)
       become: no
