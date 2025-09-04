@@ -207,7 +207,7 @@ vim.opt.background = "dark"
 vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
-vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls", "tinymist" })
+vim.lsp.enable({ "lua_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls", "tinymist", "gleam" })
 
 
 -- shell detection
