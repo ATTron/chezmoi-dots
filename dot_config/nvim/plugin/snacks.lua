@@ -11,7 +11,21 @@ require("snacks").setup({
   input = { enabled = false },
   lazygit = { enabled = false },
   picker = {
-    enabed = false,
+    prompt = "🦆 ",
+    enabled = true,
+    formatters = {
+      file = {
+        truncate = 80,
+      },
+    },
+    win = {
+      input = {
+        keys = {
+          ["<Tab>"] = { "list_down", mode = { "n", "i" } },
+          ["<S-Tab>"] = { "list_up", mode = { "n", "i" } },
+        },
+      },
+    },
   },
   notifier = { enabled = false },
   quickfile = { enabled = true },
