@@ -4,15 +4,11 @@ vim.pack.add({
 
 local utils = require("utils")
 
-local success = utils.ensure_plugin_built(
-  'https://github.com/mistricky/codesnap.nvim.git',
-  'codesnap.nvim',
-  'make',
-  'lua/generator'
-)
+local success =
+    utils.ensure_plugin_built("https://github.com/mistricky/codesnap.nvim.git", "codesnap.nvim", "make", "lua/generator")
 
 if success then
-  vim.cmd('packadd codesnap.nvim')
+  vim.cmd("packadd codesnap.nvim")
   require("codesnap").setup({
     has_breadcrumbs = true,
     code_font_family = "Berkeley Mono",
