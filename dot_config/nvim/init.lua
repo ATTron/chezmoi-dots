@@ -143,39 +143,27 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 
-vim.diagnostic.config {
+vim.diagnostic.config({
   severity_sort = true,
   virtual_text = false,
   virtual_lines = {
     only_current_line = true,
   },
-}
+})
 
-vim.fn.sign_define(
-  "DiagnosticSignError",
-  { text = "󰅚", texthl = "DiagnosticSignError" }
-)
-vim.fn.sign_define(
-  "DiagnosticSignWarn",
-  { text = "󰀪", texthl = "DiagnosticSignWarn" }
-)
-vim.fn.sign_define(
-  "DiagnosticSignInfo",
-  { text = "󰋽", texthl = "DiagnosticSignInfo" }
-)
-vim.fn.sign_define(
-  "DiagnosticSignHint",
-  { text = "󰌶", texthl = "DiagnosticSignHint" }
-)
+vim.fn.sign_define("DiagnosticSignError", { text = "󰅚", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "󰀪", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "󰋽", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "󰌶", texthl = "DiagnosticSignHint" })
 
 -- packages
 vim.pack.add({
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+  { src = "https://github.com/craftzdog/solarized-osaka.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
-  { src = "https://github.com/ellisonleao/gruvbox.nvim" },
   { src = "https://github.com/chomosuke/typst-preview.nvim" },
   { src = "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
 })
@@ -200,12 +188,19 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- set colorscheme
+vim.opt.background = "dark"
+
+require("solarized-osaka").setup({
+  transparent = true,
+  terminal_colors = true,
+})
+vim.cmd([[colorscheme solarized-osaka]])
+
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
 })
-vim.opt.background = "dark"
-vim.cmd([[colorscheme gruvbox]])
+-- vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls", "tinymist", "gleam" })
@@ -215,11 +210,11 @@ vim.lsp.config("lua_ls", {
   settings = {
     Lua = {
       diagnostics = {
-        globals = { "vim" } }
-    }
-  }
+        globals = { "vim" },
+      },
+    },
+  },
 })
-
 
 -- shell detection
 -- Auto-detect shell
