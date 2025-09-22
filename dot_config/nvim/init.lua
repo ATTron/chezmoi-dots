@@ -145,9 +145,28 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 vim.diagnostic.config({
   severity_sort = true,
-  virtual_text = false,
-  virtual_lines = {
-    only_current_line = true,
+  float = { border = "rounded", source = "if_many" },
+  underline = { severity = vim.diagnostic.severity.ERROR },
+  signs = vim.g.have_nerd_font and {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "󰅚 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.INFO] = "󰋽 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    },
+  } or {},
+  virtual_text = {
+    source = "if_many",
+    spacing = 2,
+    format = function(diagnostic)
+      local diagnostic_message = {
+        [vim.diagnostic.severity.ERROR] = diagnostic.message,
+        [vim.diagnostic.severity.WARN] = diagnostic.message,
+        [vim.diagnostic.severity.INFO] = diagnostic.message,
+        [vim.diagnostic.severity.HINT] = diagnostic.message,
+      }
+      return diagnostic_message[diagnostic.severity]
+    end,
   },
 })
 
@@ -165,11 +184,9 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/chomosuke/typst-preview.nvim" },
-  { src = "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
 })
 
 -- setup plugins
-require("lsp_lines").setup({})
 
 require("conform").setup({
   formatters_by_ft = {
@@ -203,7 +220,7 @@ require("gruvbox").setup({
 -- vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
-vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "ty", "clangd", "gopls", "tinymist", "gleam" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "pyright", "clangd", "gopls", "tinymist", "gleam" })
 
 -- disable the annoying undefined global vim warning
 vim.lsp.config("lua_ls", {
