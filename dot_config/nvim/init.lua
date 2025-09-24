@@ -220,7 +220,7 @@ require("gruvbox").setup({
 -- vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
-vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "pyright", "clangd", "gopls", "tinymist", "gleam" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
 
 -- disable the annoying undefined global vim warning
 vim.lsp.config("lua_ls", {
