@@ -290,7 +290,7 @@
         export PATH="$HOME/.cargo/bin:$PATH"
         cargo install starship-jj --locked
       args:
-        creates: "{{ home_dir }}/.cargo/bin/jj"
+        creates: "{{ home_dir }}/.cargo/bin/starship-jj"
         executable: /bin/bash
 
     - name: Install Neovim nightly using bob
