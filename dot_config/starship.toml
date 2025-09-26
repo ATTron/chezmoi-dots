@@ -49,25 +49,61 @@ symbol = " "
 [gcloud]
 symbol = "  "
 
-[git_branch]
-symbol = " "
+[git_status]
+disabled = true
+
+[custom.git_status]
+when = "! jj --ignore-working-copy root"
+command = "starship module git_status"
+style = "" # This disables the default "(bold green)" style
+description = "Only show git_status if we're not in a jj repo"
 
 [git_commit]
-tag_symbol = '  '
+disabled = true
 
-[git_status]
-format = '([$all_status$ahead_behind](style))'
-conflicted = '[🏳](bold red)'
-ahead = '[⇡${count}](bold red)'
-diverged = '[⇕⇡${ahead_count}⇣${behind_count}](bold red)'
-behind = '[⇣${count}](bold red)'
-up_to_date = '[✓ ](bold green)'
-untracked = '[🤷](bold red)'
-stashed = '[📦](bold red)'
-modified = '[📝](bold red)'
-staged = '[++\($count\)](bold red)'
-renamed = '[👅](bold red)'
-deleted = '[🗑](bold red)'
+[custom.git_commit]
+when = "! jj --ignore-working-copy root"
+command = "starship module git_commit"
+style = ""
+description = "Only show git_commit if we're not in a jj repo"
+
+[git_metrics]
+disabled = true
+
+[custom.git_metrics]
+when = "! jj --ignore-working-copy root"
+command = "starship module git_metrics"
+description = "Only show git_metrics if we're not in a jj repo"
+style = ""
+
+[git_branch]
+disabled = true
+
+[custom.git_branch]
+when = "! jj --ignore-working-copy root"
+command = "starship module git_branch"
+description = "Only show git_branch if we're not in a jj repo"
+style = ""
+
+# [git_branch]
+# symbol = " "
+#
+# [git_commit]
+# tag_symbol = '  '
+#
+# [git_status]
+# format = '([$all_status$ahead_behind](style))'
+# conflicted = '[🏳](bold red)'
+# ahead = '[⇡${count}](bold red)'
+# diverged = '[⇕⇡${ahead_count}⇣${behind_count}](bold red)'
+# behind = '[⇣${count}](bold red)'
+# up_to_date = '[✓ ](bold green)'
+# untracked = '[🤷](bold red)'
+# stashed = '[📦](bold red)'
+# modified = '[📝](bold red)'
+# staged = '[++\($count\)](bold red)'
+# renamed = '[👅](bold red)'
+# deleted = '[🗑](bold red)'
 
 [golang]
 symbol = " "
