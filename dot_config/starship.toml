@@ -107,18 +107,18 @@ ssh_symbol = " "
 symbol = " "
 
 [custom.jj]
-ignore_timeout = true
-description = "jj highlighted (bookmark or change id)"
-detect_folders = [".jj"]
-command = """
-jj log --revisions @ --no-graph --ignore-working-copy --color never --limit 1 --template '
-separate(" ",
-  if(bookmarks, bookmarks, change_id.shortest(4))
-)
-' | awk '{print $1}'
-"""
+command = '''
+jj log --revisions @ --limit 1 --ignore-working-copy --no-graph --color never --template '
+  separate(" ",
+    if(bookmarks, bookmarks, change_id.shortest(4))
+  )
+' 2>/dev/null | cut -d' ' -f1
+'''
+when = "jj --ignore-working-copy root"
 format = "[ 󰜜 $output ]($style)"
 style = "bold blue"
+ignore_timeout = true
+description = "jj highlighted (bookmark or 4-char change id)"
 
 [julia]
 symbol = " "
