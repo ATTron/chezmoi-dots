@@ -85,26 +85,6 @@ command = "starship module git_branch"
 description = "Only show git_branch if we're not in a jj repo"
 style = ""
 
-# [git_branch]
-# symbol = " "
-#
-# [git_commit]
-# tag_symbol = '  '
-#
-# [git_status]
-# format = '([$all_status$ahead_behind](style))'
-# conflicted = '[🏳](bold red)'
-# ahead = '[⇡${count}](bold red)'
-# diverged = '[⇕⇡${ahead_count}⇣${behind_count}](bold red)'
-# behind = '[⇣${count}](bold red)'
-# up_to_date = '[✓ ](bold green)'
-# untracked = '[🤷](bold red)'
-# stashed = '[📦](bold red)'
-# modified = '[📝](bold red)'
-# staged = '[++\($count\)](bold red)'
-# renamed = '[👅](bold red)'
-# deleted = '[🗑](bold red)'
-
 [golang]
 symbol = " "
 
@@ -126,38 +106,19 @@ ssh_symbol = " "
 [java]
 symbol = " "
 
-# [custom.jj]
-# command = "prompt"
-# format = "$output"
-# ignore_timeout = true
-# shell = ["starship-jj", "--ignore-working-copy", "starship"]
-# use_stdin = false
-# when = true
-
 [custom.jj]
-description = "The current jj status"
-when = "jj --ignore-working-copy root"
-symbol = "🥋 "
-command = '''
-jj log --revisions @ --no-graph --ignore-working-copy --color always --limit 1 --template '
-  separate(" ",
-    change_id.shortest(4),
-    bookmarks,
-    "|",
-    concat(
-      if(conflict, "💥"),
-      if(divergent, "🚧"),
-      if(hidden, "👻"),
-      if(immutable, "🔒"),
-    ),
-    raw_escape_sequence("\x1b[1;32m") ++ if(empty, "(empty)"),
-    raw_escape_sequence("\x1b[1;32m") ++ coalesce(
-      truncate_end(29, description.first_line(), "…"),
-      "(no description set)",
-    ) ++ raw_escape_sequence("\x1b[0m"),
-  )
-'
-'''
+ignore_timeout = true
+description = "jj highlighted (bookmark or change id)"
+detect_folders = [".jj"]
+command = """
+jj log --revisions @ --no-graph --ignore-working-copy --color never --limit 1 --template '
+separate(" ",
+  if(bookmarks, bookmarks, change_id.shortest(4))
+)
+' | awk '{print $1}'
+"""
+format = "[ 󰜜 $output ]($style)"
+style = "bold blue"
 
 [julia]
 symbol = " "
