@@ -7,16 +7,11 @@ $c\
 $rust\
 $golang\
 $nodejs\
-$php\
-$java\
-$kotlin\
-$haskell\
 $python\
+$zig\
 $docker_context\
 $kubernetes\
 $aws\
-$pulumi\
-$conda\
 $time\
 $container\
 $hostname\
