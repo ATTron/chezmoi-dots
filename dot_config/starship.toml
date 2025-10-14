@@ -1,3 +1,31 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$directory\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+$docker_context\
+$kubernetes\
+$aws\
+$pulumi\
+$conda\
+$time\
+$container\
+$hostname\
+$sudo\
+$cmd_duration\
+$custom\
+$line_break\
+$character"""
+
 [aws]
 symbol = "  "
 
@@ -147,6 +175,10 @@ symbol = " "
 [ocaml]
 symbol = " "
 
+[os]
+disabled = false
+style = "bg:red fg:crust"
+
 [os.symbols]
 Alpaquita = " "
 Alpine = " "
@@ -155,6 +187,7 @@ Amazon = " "
 Android = " "
 Arch = " "
 Artix = " "
+Bluefin = "󰌽 "
 CachyOS = " "
 CentOS = " "
 Debian = " "
@@ -210,7 +243,7 @@ symbol = " "
 symbol = "󰏗 "
 
 [python]
-symbol = " "
+symbol = " "
 
 [rlang]
 symbol = "󰟔 "
