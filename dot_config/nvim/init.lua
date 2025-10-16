@@ -211,13 +211,13 @@ require("solarized-osaka").setup({
   transparent = true,
   terminal_colors = true,
 })
-vim.cmd([[colorscheme solarized-osaka]])
+-- vim.cmd([[colorscheme solarized-osaka]])
 
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
 })
--- vim.cmd([[colorscheme gruvbox]])
+vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
