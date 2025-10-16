@@ -1,0 +1,39 @@
+{
+  "plugins": {
+    "LuaSnip": {
+      "rev": "113f831"
+    },
+    "blink.cmp": {
+      "version": "'v1.3.1'"
+    },
+    "bufferline.nvim": [],
+    "codesnap.nvim": [],
+    "conform.nvim": [],
+    "fff.nvim": [],
+    "gitsigns.nvim": [],
+    "gruvbox.nvim": [],
+    "guess-indent.nvim": [],
+    "mini.pairs": [],
+    "mini.statusline": [],
+    "mini.surround": {
+      "rev": "444e155"
+    },
+    "nvim-lspconfig": {
+      "rev": "ac98db2"
+    },
+    "nvim-tmux-navigation": [],
+    "nvim-treesitter": [],
+    "nvim-web-devicons": [],
+    "oil.nvim": {
+      "rev": "7194872"
+    },
+    "snacks.nvim": {
+      "rev": "454ba02"
+    },
+    "solarized-osaka.nvim": [],
+    "todo-comments.nvim": {
+      "rev": "19d461d"
+    },
+    "typst-preview.nvim": []
+  }
+}
