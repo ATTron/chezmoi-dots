@@ -9,6 +9,7 @@ $golang\
 $nodejs\
 $python\
 $zig\
+$typst\
 $docker_context\
 $kubernetes\
 $aws\
@@ -182,7 +183,8 @@ Amazon = " "
 Android = " "
 Arch = " "
 Artix = " "
-Bluefin = "󰌽 "
+# Bluefin = "󰌽 "
+Bluefin = "🦖 "
 CachyOS = " "
 CentOS = " "
 Debian = " "
