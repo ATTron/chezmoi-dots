@@ -69,6 +69,10 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!"<CR>')
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
 
+-- center when jumping with lsp movement
+vim.keymap.set("n", "[m", "[mzz")
+vim.keymap.set("n", "]m", "]mzz")
+
 -- move lines up/down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
