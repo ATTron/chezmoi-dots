@@ -10,16 +10,16 @@ $nodejs\
 $python\
 $zig\
 $typst\
-$docker_context\
 $kubernetes\
 $aws\
 $time\
-$container\
 $hostname\
 $sudo\
 $cmd_duration\
 $custom\
 $line_break\
+$docker_context\
+$container\
 $character"""
 
 [aws]
