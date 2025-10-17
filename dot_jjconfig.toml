@@ -3,5 +3,6 @@ s = ["log", "--limit", "10"]
 l = ["log"]
 mm = ["bookmark", "set", "main"]
 bm = ["bookmark", "set"]
-pb = ["git", "push", "--bookmark"]
+pb = ["git", "push"]
+rb = ["rebase", "-d", "main@origin"]
 
