@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "gd", "<cmd>lua Snacks.picker.lsp_definitions()<cr>")
     vim.keymap.set("n", "gD", "<cmd>lua Snacks.picker.lsp_declarations()<cr>")
     vim.keymap.set("n", "gr", "<cmd>lua Snacks.picker.lsp_references()<cr>")
-    vim.keymap.set({ "n", "x" }, "gca", vim.lsp.buf.code_action)
+    vim.keymap.set({ "n", "x" }, "<Leader>ca", vim.lsp.buf.code_action)
     vim.keymap.set("n", "<leader>K", vim.lsp.buf.hover)
 
     if client and client.server_capabilities.documentHighlightProvider then
