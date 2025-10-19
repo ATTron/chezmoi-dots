@@ -1,7 +1,7 @@
 vim.pack.add({
   {
     src = "https://github.com/saghen/blink.cmp",
-    version = "v1.3.1",
+    version = "v1.7.0",
   },
   { src = "https://github.com/L3MON4D3/LuaSnip", }
 })
@@ -87,6 +87,7 @@ if success then
         auto_show_delay_ms = 200,
         window = {
           border = 'rounded',
+          winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None',
         }
       },
       menu = {
@@ -94,6 +95,8 @@ if success then
           return not require("luasnip").expand_or_jumpable() and not in_treesitter_capture({ "comment", "string" })
         end,
         -- auto_show = true,
+        border = 'rounded',
+        winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
         draw = {
           columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
         }
@@ -110,19 +113,48 @@ if success then
         'label',
       },
     },
-    snippets = {
-      expand = function(snippet)
-        vim.snippet.expand(snippet)
-      end,
-      active = function(filter)
-        return vim.snippet.active(filter)
-      end,
-      jump = function(direction)
-        vim.snippet.jump(direction)
-      end,
-    },
+    signature = { enabled = true },
+    snippets = { preset = 'luasnip' },
   })
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+
+  -- Custom highlight groups for better styling (dynamic based on colorscheme)
+  local function setup_highlights()
+    -- Menu styling - uses Pmenu (popup menu) colors from the theme
+    vim.api.nvim_set_hl(0, 'BlinkCmpMenu', { link = 'Pmenu' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpMenuBorder', { link = 'FloatBorder' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpMenuSelection', { link = 'PmenuSel' })
+
+    -- Documentation window - uses NormalFloat for floating windows
+    vim.api.nvim_set_hl(0, 'BlinkCmpDoc', { link = 'NormalFloat' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpDocBorder', { link = 'FloatBorder' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpDocCursorLine', { link = 'CursorLine' })
+
+    -- Kind icon colors - links to semantic highlight groups
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindText', { link = 'Normal' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindMethod', { link = '@function.method' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindFunction', { link = 'Function' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindConstructor', { link = '@constructor' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindField', { link = '@variable.member' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindVariable', { link = '@variable' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindClass', { link = 'Type' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindInterface', { link = 'Type' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindModule', { link = '@module' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindProperty', { link = '@property' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindKeyword', { link = 'Keyword' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindSnippet', { link = 'Special' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindFile', { link = 'Directory' })
+    vim.api.nvim_set_hl(0, 'BlinkCmpKindFolder', { link = 'Directory' })
+  end
+
+  -- Set up highlights initially
+  setup_highlights()
+
+  -- Re-apply highlights when colorscheme changes
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    group = vim.api.nvim_create_augroup('BlinkCmpHighlights', { clear = true }),
+    callback = setup_highlights,
+  })
 end
