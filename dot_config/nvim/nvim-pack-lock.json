@@ -1,7 +1,7 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "113f831"
+      "rev": "f958d98"
     },
     "blink.cmp": {
       "version": "'v1.3.1'"
@@ -9,8 +9,12 @@
     "bufferline.nvim": [],
     "codesnap.nvim": [],
     "conform.nvim": [],
-    "fff.nvim": [],
-    "gitsigns.nvim": [],
+    "fff.nvim": {
+      "rev": "ee8bd6e"
+    },
+    "gitsigns.nvim": {
+      "rev": "20ad441"
+    },
     "gruvbox.nvim": [],
     "guess-indent.nvim": [],
     "mini.pairs": [],
@@ -28,12 +32,14 @@
       "rev": "7194872"
     },
     "snacks.nvim": {
-      "rev": "454ba02"
+      "rev": "a0df15e"
     },
     "solarized-osaka.nvim": [],
     "todo-comments.nvim": {
       "rev": "19d461d"
     },
-    "typst-preview.nvim": []
+    "typst-preview.nvim": {
+      "rev": "e544812"
+    }
   }
 }
