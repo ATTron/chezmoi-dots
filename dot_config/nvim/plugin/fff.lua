@@ -1,5 +1,8 @@
 vim.pack.add({
-  { src = "https://github.com/dmtrKovalenko/fff.nvim" },
+  {
+    src = "https://github.com/dmtrKovalenko/fff.nvim",
+    version = "51f3259"
+  },
 })
 
 vim.api.nvim_create_autocmd('PackChanged', {
@@ -31,6 +34,11 @@ require("fff").setup({
     preview_size = 0.5,
     height = 0.8,               -- Window height
     width = 0.8,                -- Window width
+  },
+  preview = {
+    max_lines = 200,
+    max_size = 5 * 1024 * 1024,
+    binary_file_threshold = 0,
   },
   keymaps = {
     close = '<Esc>',
