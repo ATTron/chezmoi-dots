@@ -5,13 +5,14 @@
     },
     "blink.cmp": {
       "rev": "327fff9",
-      "version": "'v1.7.0'"
+      "version": "'v1.3.1'"
     },
     "bufferline.nvim": [],
     "codesnap.nvim": [],
     "conform.nvim": [],
     "fff.nvim": {
-      "rev": "ee8bd6e"
+      "rev": "51f3259",
+      "version": "'51f3259'"
     },
     "gitsigns.nvim": {
       "rev": "20ad441"
