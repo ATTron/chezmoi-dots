@@ -1,31 +1,35 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "f958d98"
+      "rev": "ccf25a5"
     },
     "blink.cmp": {
-      "rev": "327fff9",
+      "rev": "022521a",
       "version": "'v1.3.1'"
     },
     "bufferline.nvim": [],
     "codesnap.nvim": [],
-    "conform.nvim": [],
+    "conform.nvim": {
+      "rev": "235dd79"
+    },
     "fff.nvim": {
-      "rev": "51f3259",
-      "version": "'51f3259'"
+      "rev": "e8850c3"
     },
     "gitsigns.nvim": {
       "rev": "20ad441"
     },
     "gruvbox.nvim": [],
     "guess-indent.nvim": [],
+    "lualine.nvim": {
+      "rev": "3946f01",
+      "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
     "mini.pairs": [],
-    "mini.statusline": [],
     "mini.surround": {
       "rev": "444e155"
     },
     "nvim-lspconfig": {
-      "rev": "ac98db2"
+      "rev": "e5c61b0"
     },
     "nvim-tmux-navigation": [],
     "nvim-treesitter": [],
@@ -34,7 +38,7 @@
       "rev": "7e1cd77"
     },
     "snacks.nvim": {
-      "rev": "a0df15e"
+      "rev": "d293b21"
     },
     "solarized-osaka.nvim": [],
     "todo-comments.nvim": {

@@ -1,5 +1,23 @@
 vim.pack.add({
-  { src = "https://github.com/echasnovski/mini.statusline" },
+  { src = "https://github.com/nvim-lualine/lualine.nvim" }
 })
-local statusline = require("mini.statusline")
-statusline.setup({ use_icons = vim.g.have_nerd_font })
+require("lualine").setup({
+  options = {
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
+    theme = "auto"
+  },
+  sections = {
+    lualine_a = {
+      {
+        'mode',
+        fmt = function(str) return str:sub(1,1) end
+      }
+    },
+    lualine_b = { '' },
+    lualine_c = { 'filename' },
+    lualine_x = { 'encoding', 'fileformat', 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' }
+  },
+})

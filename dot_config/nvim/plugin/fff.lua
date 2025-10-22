@@ -1,7 +1,6 @@
 vim.pack.add({
   {
     src = "https://github.com/dmtrKovalenko/fff.nvim",
-    version = "51f3259"
   },
 })
 
