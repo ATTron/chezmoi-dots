@@ -8,9 +8,11 @@
       "version": "'v1.3.1'"
     },
     "bufferline.nvim": [],
-    "codesnap.nvim": [],
+    "codesnap.nvim": {
+      "rev": "927d4a4"
+    },
     "conform.nvim": {
-      "rev": "235dd79"
+      "rev": "9fd3d5e"
     },
     "fff.nvim": {
       "rev": "e8850c3"
@@ -26,26 +28,32 @@
     },
     "mini.pairs": [],
     "mini.surround": {
-      "rev": "444e155"
+      "rev": "da5a221"
     },
     "nvim-lspconfig": {
-      "rev": "e5c61b0"
+      "rev": "e25994a"
     },
     "nvim-tmux-navigation": [],
     "nvim-treesitter": [],
-    "nvim-web-devicons": [],
+    "nvim-web-devicons": {
+      "rev": "8dcb311"
+    },
     "oil.nvim": {
       "rev": "7e1cd77"
     },
     "snacks.nvim": {
-      "rev": "d293b21"
+      "rev": "143e9b5"
     },
     "solarized-osaka.nvim": [],
+    "tiny-inline-diagnostic.nvim": {
+      "rev": "994c13d",
+      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+    },
     "todo-comments.nvim": {
-      "rev": "19d461d"
+      "rev": "411503d"
     },
     "typst-preview.nvim": {
-      "rev": "e544812"
+      "rev": "64469f8"
     }
   }
 }
