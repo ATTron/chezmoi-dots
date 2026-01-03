@@ -140,15 +140,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "OilActionsPost",
-  callback = function(event)
-    if event.data.actions.type == "move" then
-      Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
-    end
-  end,
-})
-
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
     vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = "#60c2db", italic = true })
@@ -190,6 +181,7 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "󰌶", texthl = "DiagnosticSi
 -- packages
 vim.pack.add({
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+  { src = "https://github.com/dgox16/oldworld.nvim" },
   { src = "https://github.com/craftzdog/solarized-osaka.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
@@ -225,11 +217,22 @@ require("solarized-osaka").setup({
 })
 -- vim.cmd([[colorscheme solarized-osaka]])
 
+require("oldworld").setup({
+  terminal_colors = true,
+  variant = "default",
+  highlight_overrides = {
+    Normal = { bg = 'NONE' },
+    NormalNC = { bg = 'NONE' },
+    CursorLine = { bg = '#222128' },
+  },
+})
+vim.cmd([[colorscheme oldworld]])
+
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
 })
-vim.cmd([[colorscheme gruvbox]])
+-- vim.cmd([[colorscheme gruvbox]])
 
 -- setup lsp servers
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })

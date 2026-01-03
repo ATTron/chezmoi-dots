@@ -1,5 +1,8 @@
 vim.pack.add({
-  { src = "https://github.com/mistricky/codesnap.nvim" },
+  {
+    src = "https://github.com/mistricky/codesnap.nvim",
+    version = "v1.6.3"
+  },
 })
 
 local utils = require("utils")
