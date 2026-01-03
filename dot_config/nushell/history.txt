@@ -1,0 +1,162 @@
+clear
+ff
+clear
+ff
+clear
+ff
+clear
+nvim
+clear
+ff
+clear
+yay
+nvim
+clear
+nvim
+ls
+ll
+clear
+yay
+clear
+nvim
+clear
+ls
+ff
+clear
+ls
+ll
+clear
+nvim
+ff
+nvim
+ff
+nvim
+ls -la
+clear
+nvim
+clea
+clear
+yay
+clear
+nvim
+$env.config.highlight_resolved_externals
+$env.config.color_config.shape_external_resolved?<\n>
+$env.config.color_config.shape_external?<\n>
+nvim
+ls
+ll
+$env.config.color_config.shape_internalcall?
+nvim
+ls
+ls -la
+ll
+clear
+yay
+clear
+nvim
+clear
+ls
+cd
+clear
+ls
+cd projects/
+ls
+cd zig
+cd astroz
+cd
+clear
+cd astroz
+clear
+nvim
+cd ~/.config/nushell/
+ls
+nvim
+cd astroz
+which cd
+nvim
+which cd
+cd astroz
+clear
+jj st
+jj s
+clear
+jj log
+cd
+clear
+tmux ls
+clear
+tmux ls
+cleat
+clear
+tmux ls
+nvim .tmux.conf
+tmux ls
+ff
+yay
+cd astroz
+clear
+nvim
+clear
+nvim
+cd zls
+clear
+zigup fetch master --path-link /usr/bin/zig
+zsh
+clear
+zig build -Doptimize=ReleaseSafe
+ff
+clear
+yay
+clear
+git fetch
+git pull
+clear
+cd
+clear
+cd zig
+ls
+cd astroz
+zig build test --summary
+clear
+yay
+clear
+zig build test --summary
+clear
+ff
+clear
+cd ..
+ls
+cd ts_js/
+ls
+cd tweather/
+ls
+bun index.ts -l "new york" -u "imperial"
+zsh
+clear
+ff
+cd tweather/
+cd ts_js/
+bun index.ts -l "new york" -u "imperial"
+cd
+cd .nvim
+cd nvim
+clear
+nvim
+nvim
+clear
+nvim
+clear
+nvim
+clear
+chezmoi
+yay -Ss chezmoi
+yay -S chezmoi
+clear
+chezmoi init git@github.com:ATTron/chezmoi-dots.git
+chezmoi diff
+clear
+ls
+clear
+cd
+clear
+chezmoi add ~/.config/nvim
