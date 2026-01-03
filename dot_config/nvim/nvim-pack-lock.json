@@ -1,59 +1,68 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "ccf25a5"
+      "rev": "3732756"
     },
     "blink.cmp": {
-      "rev": "022521a",
       "version": "'v1.3.1'"
     },
     "bufferline.nvim": [],
     "codesnap.nvim": {
-      "rev": "927d4a4"
+      "rev": "da475d3",
+      "src": "https://github.com/mistricky/codesnap.nvim",
+      "version": "'v1.6.3'"
     },
     "conform.nvim": {
-      "rev": "9fd3d5e"
+      "rev": "8314f4c"
     },
     "fff.nvim": {
-      "rev": "e8850c3"
+      "rev": "f6af835"
     },
     "gitsigns.nvim": {
-      "rev": "20ad441"
+      "rev": "6bd2949"
     },
     "gruvbox.nvim": [],
     "guess-indent.nvim": [],
     "lualine.nvim": {
-      "rev": "3946f01",
-      "src": "https://github.com/nvim-lualine/lualine.nvim"
+      "rev": "47f91c4"
     },
-    "mini.pairs": [],
+    "mini.pairs": {
+      "rev": "d5a29b6"
+    },
     "mini.surround": {
-      "rev": "da5a221"
+      "rev": "cc7b9d0"
+    },
+    "namu.nvim": {
+      "rev": "7e03a8a",
+      "src": "https://github.com/bassamsdata/namu.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "e25994a"
+      "rev": "ac04ec3"
     },
     "nvim-tmux-navigation": [],
     "nvim-treesitter": [],
     "nvim-web-devicons": {
-      "rev": "8dcb311"
+      "rev": "6788013"
     },
     "oil.nvim": {
-      "rev": "7e1cd77"
+      "rev": "81b8a91"
+    },
+    "oldworld.nvim": {
+      "rev": "db072a0",
+      "src": "https://github.com/dgox16/oldworld.nvim"
     },
     "snacks.nvim": {
-      "rev": "143e9b5"
+      "rev": "fe7cfe9"
     },
     "solarized-osaka.nvim": [],
     "tiny-inline-diagnostic.nvim": {
-      "rev": "994c13d",
-      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+      "rev": "d9d12d4"
     },
     "todo-comments.nvim": {
-      "rev": "411503d"
+      "rev": "31e3c38"
     },
     "typst-preview.nvim": {
-      "rev": "64469f8"
+      "rev": "bf5d5ea"
     }
   }
 }
