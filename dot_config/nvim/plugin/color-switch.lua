@@ -2,6 +2,7 @@ local colorschemes = {
   "gruvbox",
   "solarized-osaka",
   "oldworld",
+  "bebop",
 }
 
 local function select_colorscheme()

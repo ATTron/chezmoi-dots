@@ -1,7 +1,6 @@
 vim.pack.add({
   {
     src = "https://github.com/saghen/blink.cmp",
-    version = "v1.3.1",
   },
   { src = "https://github.com/L3MON4D3/LuaSnip", }
 })
