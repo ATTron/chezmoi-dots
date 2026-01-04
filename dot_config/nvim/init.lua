@@ -182,6 +182,7 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "󰌶", texthl = "DiagnosticSi
 vim.pack.add({
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
   { src = "https://github.com/dgox16/oldworld.nvim" },
+  { src = "https://github.com/ATTron/bebop.nvim" },
   { src = "https://github.com/craftzdog/solarized-osaka.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
@@ -226,13 +227,20 @@ require("oldworld").setup({
     CursorLine = { bg = '#222128' },
   },
 })
-vim.cmd([[colorscheme oldworld]])
+-- vim.cmd([[colorscheme oldworld]])
 
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
 })
 -- vim.cmd([[colorscheme gruvbox]])
+
+require("bebop").setup({
+  transparent = true,
+  terminal_colors = true,
+  preset = "default",
+})
+vim.cmd([[colorscheme bebop]])
 
 -- setup lsp servers
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
