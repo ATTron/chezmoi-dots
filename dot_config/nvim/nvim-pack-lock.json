@@ -26,11 +26,11 @@
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "fff.nvim": {
-      "rev": "f6af8353c3cb02ddde1588f24f27ff8b3a4037cf",
+      "rev": "5ab271ea9da084495d18e3f90f47aa6a87289b01",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "gitsigns.nvim": {
-      "rev": "6bd29494e3f79ff08be1d35bc1926ed23c22ed9a",
+      "rev": "42d6aed4e94e0f0bbced16bbdcc42f57673bd75e",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "gruvbox.nvim": {
@@ -58,7 +58,7 @@
       "src": "https://github.com/bassamsdata/namu.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "0b38bc74487e73489624d61396af7805af9cc75f",
+      "rev": "92ee7d42320edfbb81f3cad851314ab197fa324a",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tmux-navigation": {
@@ -70,7 +70,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-web-devicons": {
-      "rev": "6788013bb9cb784e606ada44206b0e755e4323d7",
+      "rev": "803353450c374192393f5387b6a0176d0972b848",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "oil.nvim": {
@@ -86,11 +86,11 @@
       "src": "https://github.com/folke/snacks.nvim"
     },
     "solarized-osaka.nvim": {
-      "rev": "f796014c14b1910e08d42cc2077fef34f08e0295",
+      "rev": "5dd1969a7492f3a2c0fde5d9d2472aa751c44d3b",
       "src": "https://github.com/craftzdog/solarized-osaka.nvim"
     },
     "tiny-inline-diagnostic.nvim": {
-      "rev": "f06ffded0b6069a257d6aa8ae7113104b7313fc1",
+      "rev": "c7b1488ad0b389763c34bd17a6264424b3da5a52",
       "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
     },
     "todo-comments.nvim": {

@@ -181,9 +181,7 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "󰌶", texthl = "DiagnosticSi
 -- packages
 vim.pack.add({
   { src = "https://github.com/ellisonleao/gruvbox.nvim" },
-  { src = "https://github.com/dgox16/oldworld.nvim" },
   { src = "https://github.com/ATTron/bebop.nvim" },
-  { src = "https://github.com/craftzdog/solarized-osaka.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -255,6 +253,14 @@ vim.lsp.config("lua_ls", {
     },
   },
 })
+
+-- force .h files to be c
+vim.filetype.add({
+  extension = {
+    h = "c",
+  },
+})
+
 
 -- shell detection
 -- Auto-detect shell
