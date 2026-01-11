@@ -1,7 +1,5 @@
 local colorschemes = {
   "gruvbox",
-  "solarized-osaka",
-  "oldworld",
   "bebop",
 }
 
