@@ -210,23 +210,6 @@ require("nvim-treesitter.configs").setup({
 -- set colorscheme
 vim.opt.background = "dark"
 
-require("solarized-osaka").setup({
-  transparent = true,
-  terminal_colors = true,
-})
--- vim.cmd([[colorscheme solarized-osaka]])
-
-require("oldworld").setup({
-  terminal_colors = true,
-  variant = "default",
-  highlight_overrides = {
-    Normal = { bg = 'NONE' },
-    NormalNC = { bg = 'NONE' },
-    CursorLine = { bg = '#222128' },
-  },
-})
--- vim.cmd([[colorscheme oldworld]])
-
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
