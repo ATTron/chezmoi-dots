@@ -98,6 +98,9 @@ vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase w
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
+-- source init.lua
+vim.keymap.set("n", "<leader>qR", ":source ~/.config/nvim/init.lua<CR>")
+
 -- non plugin keymaps end
 
 -- autocommands
@@ -216,6 +219,7 @@ require("gruvbox").setup({
 })
 -- vim.cmd([[colorscheme gruvbox]])
 
+-- see you <leader> cowboy
 require("bebop").setup({
   transparent = true,
   terminal_colors = true,
@@ -243,7 +247,6 @@ vim.filetype.add({
     h = "c",
   },
 })
-
 
 -- shell detection
 -- Auto-detect shell

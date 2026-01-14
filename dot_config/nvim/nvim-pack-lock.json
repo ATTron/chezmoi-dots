@@ -5,11 +5,11 @@
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
     "bebop.nvim": {
-      "rev": "18c3f10",
+      "rev": "997b2d40a728a17d225026f9580cb5e489e82f4f",
       "src": "https://github.com/ATTron/bebop.nvim"
     },
     "blink.cmp": {
-      "rev": "6a4914c",
+      "rev": "b1b77404ce3c8b11e8f35611a28176b944c41e29",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "bufferline.nvim": {
@@ -22,7 +22,7 @@
       "version": "'v2.0.0-beta.17'"
     },
     "conform.nvim": {
-      "rev": "8314f4c9e205e7f30b62147069729f9a1227d8bf",
+      "rev": "238f542a118984a88124fc915d5b981680418707",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "fff.nvim": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "gruvbox.nvim": {
-      "rev": "5e0a460d8e0f7f669c158dedd5f9ae2bcac31437",
+      "rev": "a472496e1a4465a2dd574389dcf6cdb29af9bf1b",
       "src": "https://github.com/ellisonleao/gruvbox.nvim"
     },
     "guess-indent.nvim": {
@@ -74,7 +74,7 @@
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "oil.nvim": {
-      "rev": "81b8a91735ad5cd24a6b3137f14a89f19176364f",
+      "rev": "fbbb2a98721da86f46b06994fd3b4833b04c6e9b",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "oldworld.nvim": {
