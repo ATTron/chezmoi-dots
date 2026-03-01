@@ -2,33 +2,33 @@ vim.pack.add({
   {
     src = "https://github.com/saghen/blink.cmp",
   },
-  { src = "https://github.com/L3MON4D3/LuaSnip", }
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
 })
 
 local utils = require("utils")
 
 local success = utils.ensure_plugin_built(
-  'https://github.com/L3MON4D3/LuaSnip',
-  'LuaSnip',
-  'make install_jsregexp',
-  'lua/luasnip-jsregexp'
+  "https://github.com/L3MON4D3/LuaSnip",
+  "LuaSnip",
+  "make install_jsregexp",
+  "lua/luasnip-jsregexp"
 )
 
-local success = utils.ensure_plugin_built(
-  'https://github.com/saghen/blink.cmp',
-  'blink.cmp',
-  'cargo build --release',
-  'target/release/libblink_cmp_fuzzy'
+success = utils.ensure_plugin_built(
+  "https://github.com/saghen/blink.cmp",
+  "blink.cmp",
+  "cargo build --release",
+  "target/release/libblink_cmp_fuzzy"
 )
 
-function in_treesitter_capture(capture)
+local function in_treesitter_capture(capture)
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-  if vim.api.nvim_get_mode().mode == 'i' then
+  if vim.api.nvim_get_mode().mode == "i" then
     col = col - 1
   end
 
   local buf = vim.api.nvim_get_current_buf()
-  local get_captures_at_pos = require('vim.treesitter').get_captures_at_pos
+  local get_captures_at_pos = require("vim.treesitter").get_captures_at_pos
 
   local captures_at_cursor = vim.tbl_map(function(x)
     return x.capture
@@ -36,9 +36,9 @@ function in_treesitter_capture(capture)
 
   if vim.tbl_isempty(captures_at_cursor) then
     return false
-  elseif type(capture) == 'string' and vim.tbl_contains(captures_at_cursor, capture) then
+  elseif type(capture) == "string" and vim.tbl_contains(captures_at_cursor, capture) then
     return true
-  elseif type(capture) == 'table' then
+  elseif type(capture) == "table" then
     for _, v in ipairs(capture) do
       if vim.tbl_contains(captures_at_cursor, v) then
         return true
@@ -49,31 +49,31 @@ function in_treesitter_capture(capture)
 end
 
 if success then
-  require('blink.cmp').setup({
+  require("blink.cmp").setup({
     keymap = {
-      preset = 'default',
-      ['<Tab>'] = { 'select_next', 'fallback' },
-      ['<S-Tab>'] = { 'select_prev', 'fallback' },
-      ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
-      ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
-      ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-      ['<C-e>'] = { 'hide', 'fallback' },
-      ['<CR>'] = { 'accept', 'fallback' },
+      preset = "default",
+      ["<Tab>"] = { "select_next", "fallback" },
+      ["<S-Tab>"] = { "select_prev", "fallback" },
+      ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+      ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+      ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+      ["<C-e>"] = { "hide", "fallback" },
+      ["<CR>"] = { "accept", "fallback" },
     },
 
     appearance = {
       -- use_nvim_cmp_as_default = true,
-      nerd_font_variant = 'mono'
+      nerd_font_variant = "mono",
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { "lsp", "path", "snippets", "buffer" },
     },
 
     completion = {
       trigger = {
-        show_on_blocked_trigger_characters = { ' ', '\n', '\t' },
-        show_on_x_blocked_trigger_characters = { "'", '"', '(' },
+        show_on_blocked_trigger_characters = { " ", "\n", "\t" },
+        show_on_x_blocked_trigger_characters = { "'", '"', "(" },
         show_in_snippet = false,
       },
       accept = {
@@ -85,8 +85,8 @@ if success then
         auto_show = true,
         auto_show_delay_ms = 200,
         window = {
-          border = 'rounded',
-        }
+          border = "rounded",
+        },
       },
       menu = {
         auto_show = function()
@@ -95,18 +95,17 @@ if success then
         -- auto_show = true,
         draw = {
           columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
-        }
+        },
       },
       ghost_text = { enabled = false },
     },
 
-
     fuzzy = {
       implementation = "prefer_rust_with_warning",
       sorts = {
-        'score',
-        'sort_text',
-        'label',
+        "score",
+        "sort_text",
+        "label",
       },
     },
     snippets = {
@@ -123,5 +122,5 @@ if success then
   })
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+  capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 end
