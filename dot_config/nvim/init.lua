@@ -52,7 +52,7 @@ vim.opt.autoread = true
 vim.opt.autowrite = false
 
 -- non plugin keymaps start
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "-", vim.cmd.Ex)
 vim.keymap.set("i", "jk", "<Esc>")
 
 -- highlight search
@@ -104,26 +104,11 @@ vim.keymap.set("n", "<leader>qR", ":source ~/.config/nvim/init.lua<CR>")
 -- non plugin keymaps end
 
 -- autocommands
--- treat .h files as C instead of C++
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = "*.h",
-  callback = function()
-    vim.bo.filetype = "c"
-  end,
-})
-
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function()
     vim.highlight.on_yank()
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "netrw",
-  callback = function()
-    vim.keymap.set("n", "<Esc><Esc>", "<C-^>", { buffer = true })
   end,
 })
 
@@ -161,25 +146,7 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.HINT] = "󰌶 ",
     },
   } or {},
-  virtual_text = {
-    source = "if_many",
-    spacing = 2,
-    format = function(diagnostic)
-      local diagnostic_message = {
-        [vim.diagnostic.severity.ERROR] = diagnostic.message,
-        [vim.diagnostic.severity.WARN] = diagnostic.message,
-        [vim.diagnostic.severity.INFO] = diagnostic.message,
-        [vim.diagnostic.severity.HINT] = diagnostic.message,
-      }
-      return diagnostic_message[diagnostic.severity]
-    end,
-  },
 })
-
-vim.fn.sign_define("DiagnosticSignError", { text = "󰅚", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "󰀪", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "󰋽", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "󰌶", texthl = "DiagnosticSignHint" })
 
 -- packages
 vim.pack.add({
@@ -189,7 +156,6 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim.git" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
-  { src = "https://github.com/chomosuke/typst-preview.nvim" },
 })
 
 -- setup plugins
