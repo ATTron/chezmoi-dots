@@ -2,7 +2,13 @@
 s = ["log", "--limit", "10"]
 l = ["log"]
 mm = ["bookmark", "set", "main"]
-bm = ["bookmark", "set"]
+sb = ["bookmark", "set"]
 pb = ["git", "push"]
 rb = ["rebase", "-d", "main@origin"]
 
+[user]
+name = "Anthony Templeton"
+email = "twantempleton11@gmail.com"
+
+[remotes.origin]
+auto-track-bookmarks = "glob:*"
