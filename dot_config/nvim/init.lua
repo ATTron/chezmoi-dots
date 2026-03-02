@@ -1,38 +1,17 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
 vim.g.have_nerd_font = true
 
 vim.opt.showmode = false
-
--- set line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
-
--- enable mouse
-vim.opt.mouse = "a"
-
--- clipboard
 vim.opt.clipboard = "unnamedplus"
-
--- set autochdir
-vim.opt.autochdir = false
-
--- Decrease update time
 vim.opt.updatetime = 100
-
--- undo history enabled
 vim.opt.undofile = true
-
--- case insensitive search unless capital letters present
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-
--- setup whitespace characters
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-
--- editor options
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
 vim.opt.tabstop = 2
@@ -40,68 +19,29 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.breakindent = true
 vim.opt.inccommand = "split"
-
--- enable cursor line
 vim.opt.cursorline = true
 
--- file options
-vim.opt.backup = false
-vim.opt.writebackup = false
-vim.opt.swapfile = false
-vim.opt.autoread = true
-vim.opt.autowrite = false
-
--- non plugin keymaps start
+-- keymaps
 vim.keymap.set("n", "-", vim.cmd.Ex)
 vim.keymap.set("i", "jk", "<Esc>")
-
--- highlight search
-vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
--- disable arrow keys
-vim.keymap.set("n", "<left>", '<cmd>echo "Use h to move!"<CR>')
-vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!"<CR>')
-vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!"<CR>')
-vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!"<CR>')
-
--- center when jumping
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-
--- center when jumping with lsp movement
 vim.keymap.set("n", "[m", "[mzz")
 vim.keymap.set("n", "]m", "]mzz")
-
--- move lines up/down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
-
--- indent lines (keep selection)
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
-
--- force format buffer
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
-
--- buffer movement
 vim.keymap.set("n", "bn", ":bnext<CR>")
 vim.keymap.set("n", "bp", ":bprevious<CR>")
-
--- resize vertical windows
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window size" })
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window size" })
-
--- update packages
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
-
--- source init.lua
 vim.keymap.set("n", "<leader>qR", ":source ~/.config/nvim/init.lua<CR>")
-
--- non plugin keymaps end
 
 -- autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -157,8 +97,6 @@ vim.pack.add({
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
 })
 
--- setup plugins
-
 require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua", lsp_format = "fallback" },
@@ -166,16 +104,14 @@ require("conform").setup({
     rust = { "rustfmt", lsp_format = "fallback" },
   },
 })
+
 require("nvim-treesitter.configs").setup({
   ensure_installed = { "lua", "c", "vim" },
   auto_install = true,
-  highlight = {
-    enable = true,
-  },
+  highlight = { enable = true },
   indent = { enable = true },
 })
 
--- set colorscheme
 vim.opt.background = "dark"
 
 require("gruvbox").setup({
@@ -192,10 +128,8 @@ require("bebop").setup({
 })
 vim.cmd([[colorscheme bebop]])
 
--- setup lsp servers
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
 
--- disable the annoying undefined global vim warning
 vim.lsp.config("lua_ls", {
   settings = {
     Lua = {
@@ -206,7 +140,6 @@ vim.lsp.config("lua_ls", {
   },
 })
 
--- force .h files to be c
 vim.filetype.add({
   extension = {
     h = "c",
@@ -214,7 +147,6 @@ vim.filetype.add({
 })
 
 -- shell detection
--- Auto-detect shell
 local function find_shell()
   local shells = {
     vim.env.HOME .. "/.local/bin/zsh",
@@ -228,7 +160,7 @@ local function find_shell()
     end
   end
 
-  return vim.opt.shell -- fallback to default
+  return vim.opt.shell
 end
 
 vim.opt.shell = find_shell()
