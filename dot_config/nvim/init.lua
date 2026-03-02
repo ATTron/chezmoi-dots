@@ -72,6 +72,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 vim.diagnostic.config({
   severity_sort = true,
+  virtual_text = false,
   float = { border = "rounded", source = "if_many" },
   underline = { severity = vim.diagnostic.severity.ERROR },
   signs = vim.g.have_nerd_font and {
@@ -140,7 +141,7 @@ vim.keymap.set("n", "<leader>cs", function()
   end)
 end, { desc = "Select colorscheme" })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "gleam" })
 
 vim.lsp.config("lua_ls", {
   settings = {
