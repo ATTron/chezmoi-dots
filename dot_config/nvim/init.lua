@@ -114,11 +114,12 @@ require("nvim-treesitter.configs").setup({
 
 vim.opt.background = "dark"
 
+local colorschemes = { "gruvbox", "bebop" }
+
 require("gruvbox").setup({
   terminal_colors = true,
   transparent_mode = true,
 })
--- vim.cmd([[colorscheme gruvbox]])
 
 -- see you <leader> cowboy
 require("bebop").setup({
@@ -127,6 +128,20 @@ require("bebop").setup({
   preset = "default",
 })
 vim.cmd([[colorscheme bebop]])
+
+vim.keymap.set("n", "<leader>cs", function()
+  vim.ui.select(colorschemes, {
+    prompt = "Select colorscheme:",
+    format_item = function(item)
+      local current = vim.g.colors_name or "default"
+      return (item == current and "● " or "  ") .. item
+    end,
+  }, function(choice)
+    if choice then
+      vim.cmd("colorscheme " .. choice)
+    end
+  end)
+end, { desc = "Select colorscheme" })
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "tinymist", "gleam" })
 

@@ -1,5 +1,6 @@
 vim.pack.add({
   { src = "https://github.com/DNLHC/glance.nvim" },
+  { src = "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
 })
 
 require("glance").setup({
@@ -28,7 +29,15 @@ require("glance").setup({
   },
 })
 
--- setup lsp commands
+require("tiny-inline-diagnostic").setup({
+  preset = "modern",
+  options = {
+    add_messages = { display_count = true },
+    multilines = { enabled = true },
+  },
+})
+vim.diagnostic.config({ virtual_text = false })
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
   callback = function(event)
