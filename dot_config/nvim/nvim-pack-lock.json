@@ -9,9 +9,8 @@
       "src": "https://github.com/ATTron/bebop.nvim"
     },
     "blink.cmp": {
-      "rev": "b650e976a927be6b46487a0a610b75af111376c5",
-      "src": "https://github.com/saghen/blink.cmp",
-      "version": "'v1.*'"
+      "rev": "1912be2ca1f7fc98ae5b2b12fad49525f3b366ec",
+      "src": "https://github.com/saghen/blink.cmp"
     },
     "bufferline.nvim": {
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
@@ -27,7 +26,7 @@
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "fff.nvim": {
-      "rev": "c5a3f89c5eddfc2a6904b6fe4094029ef394fd1f",
+      "rev": "66e712e066aaf135b2e53cf7ffb7daa94140f9b5",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "gitsigns.nvim": {
@@ -37,6 +36,10 @@
     "glance.nvim": {
       "rev": "bf86d8b79dce808e65fdb6e9269d0b4ed6d2eefc",
       "src": "https://github.com/DNLHC/glance.nvim"
+    },
+    "grapple.nvim": {
+      "rev": "b41ddfc1c39f87f3d1799b99c2f0f1daa524c5f7",
+      "src": "https://github.com/cbochs/grapple.nvim"
     },
     "gruvbox.nvim": {
       "rev": "561126520034a1dac2f78ab063db025d12555998",

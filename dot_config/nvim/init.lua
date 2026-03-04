@@ -141,7 +141,7 @@ vim.keymap.set("n", "<leader>cs", function()
   end)
 end, { desc = "Select colorscheme" })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ruff", "zuban", "clangd", "gopls", "gleam" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ty", "zuban", "clangd", "gopls", "gleam" })
 
 vim.lsp.config("lua_ls", {
   settings = {
