@@ -10,19 +10,18 @@ vim.api.nvim_create_autocmd("PackChanged", {
   end,
 })
 
-vim.g.fff = {
-  debug = { enabled = true, show_scores = true },
-}
-
 require("fff").setup({
+  debug = { enabled = true, show_scores = true },
   prompt = "🦆 ",
   title = "Whaddya Buyin ?",
   layout = {
     prompt_position = "top",
   },
   keymaps = {
-    move_up = { "<S-Tab>", "<C-n>" },
-    move_down = { "<Tab>", "<C-p>" },
+    move_up = { "<S-Tab>", "<C-p>" },
+    move_down = { "<Tab>", "<C-n>" },
+    toggle_select = "<C-Space>",
+    cycle_grep_modes = "<C-g>",
   },
 })
 
