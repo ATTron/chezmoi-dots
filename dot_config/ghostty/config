@@ -5,3 +5,4 @@ window-padding-x = 10
 window-padding-y = 10
 background-opacity = 0.9
 keybind = shift+enter=text:\x1b\r
+adjust-icon-height = -16.6%
