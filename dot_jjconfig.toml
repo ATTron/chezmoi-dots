@@ -1,6 +1,7 @@
 [aliases]
 s = ["log", "--limit", "10"]
 l = ["log"]
+ab = ["bookmark", "advance"]
 mm = ["bookmark", "set", "main"]
 sb = ["bookmark", "set"]
 pb = ["git", "push"]
