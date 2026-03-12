@@ -788,6 +788,7 @@ alias vi = vim
 alias vim = nvim
 alias yay = paru
 alias yeet = paru -Rcns
+alias grep = rg
 
 def fzfbat [] {
   fzf --preview "bat --theme=gruvbox-dark --color=always {}" 
