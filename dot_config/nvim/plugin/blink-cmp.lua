@@ -1,5 +1,5 @@
 vim.pack.add({
-  { src = "https://github.com/saghen/blink.cmp" },
+  { src = "https://github.com/saghen/blink.cmp", version = "fix/visual-artifacts" },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
 })
 
@@ -8,6 +8,7 @@ require("blink.cmp").setup({
     preset = "default",
     ["<Tab>"] = { "select_next", "fallback" },
     ["<S-Tab>"] = { "select_prev", "fallback" },
+    ["<CR>"] = { "select_and_accept", "fallback" },
   },
 
   appearance = {

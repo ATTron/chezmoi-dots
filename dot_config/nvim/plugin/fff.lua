@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 require("fff").setup({
-  debug = { enabled = true, show_scores = true },
+  debug = { enabled = true, show_scores = false },
   prompt = "🦆 ",
   title = "Whaddya Buyin ?",
   layout = {

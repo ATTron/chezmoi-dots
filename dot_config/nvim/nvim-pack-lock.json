@@ -9,28 +9,28 @@
       "src": "https://github.com/ATTron/bebop.nvim"
     },
     "blink.cmp": {
-      "rev": "1912be2ca1f7fc98ae5b2b12fad49525f3b366ec",
-      "src": "https://github.com/saghen/blink.cmp"
+      "rev": "8a85527550c040db41272570f5fb4bae753c839f",
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "'fix/visual-artifacts'"
     },
     "bufferline.nvim": {
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
       "src": "https://github.com/akinsho/bufferline.nvim"
     },
-    "codesnap.nvim": {
-      "rev": "207907f",
-      "src": "https://github.com/mistricky/codesnap.nvim",
-      "version": "'v2.0.0-beta.17'"
-    },
     "conform.nvim": {
-      "rev": "40dcec5555f960b0a04340d76eabdf4efe78599d",
+      "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
+    "dojo.nvim": {
+      "rev": "d5d1a7644fee3305d41438c4296ad2fdad56f5c7",
+      "src": "https://github.com/ATTron/dojo.nvim"
+    },
     "fff.nvim": {
-      "rev": "66e712e066aaf135b2e53cf7ffb7daa94140f9b5",
+      "rev": "ac8df4c9e4926d23f196f30be052518454dfe251",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "gitsigns.nvim": {
-      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
+      "rev": "7c4faa3540d0781a28588cafbd4dd187a28ac6e3",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "glance.nvim": {
@@ -42,7 +42,7 @@
       "src": "https://github.com/cbochs/grapple.nvim"
     },
     "gruvbox.nvim": {
-      "rev": "561126520034a1dac2f78ab063db025d12555998",
+      "rev": "334d5fd49fc8033f26408425366c66c6390c57bb",
       "src": "https://github.com/ellisonleao/gruvbox.nvim"
     },
     "guess-indent.nvim": {
@@ -66,7 +66,7 @@
       "src": "https://github.com/bassamsdata/namu.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "ead0f5f342d8d323441e7d4b88f0fc436a81ad5f",
+      "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tmux-navigation": {
@@ -78,7 +78,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-web-devicons": {
-      "rev": "737cf6c657898d0c697311d79d361288a1343d50",
+      "rev": "d7462543c9e366c0d196c7f67a945eaaf5d99414",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "oil.nvim": {
