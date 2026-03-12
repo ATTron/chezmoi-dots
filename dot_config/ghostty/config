@@ -1,4 +1,5 @@
 font-family = "Berkeley Mono"
+font-thicken = true
 font-size = 14
 theme = "Sleepy Hollow"
 window-padding-x = 10
