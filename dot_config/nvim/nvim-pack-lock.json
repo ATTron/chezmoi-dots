@@ -22,11 +22,11 @@
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "dojo.nvim": {
-      "rev": "d5d1a7644fee3305d41438c4296ad2fdad56f5c7",
+      "rev": "1e0aaaa6e9fb2392aebd3fbdb0d170fc901c1223",
       "src": "https://github.com/ATTron/dojo.nvim"
     },
     "fff.nvim": {
-      "rev": "ac8df4c9e4926d23f196f30be052518454dfe251",
+      "rev": "4b83987ea121dbdd0c6e1065b9bc480bdf954931",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "gitsigns.nvim": {
@@ -66,7 +66,7 @@
       "src": "https://github.com/bassamsdata/namu.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
+      "rev": "702f69fb167e9119f14adc4dfd4fcadf4d1b07a0",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tmux-navigation": {
