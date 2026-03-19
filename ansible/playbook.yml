@@ -5,14 +5,58 @@
   become: yes
   become_method: sudo
   vars:
-    # username: "{{ lookup('env', 'SUDO_USER') | default('vscode') }}"
     username: >-
-      {{ (lookup('env', 'SUDO_USER') | default('')) 
-         or (lookup('env', 'USER') | default('')) 
+      {{ (lookup('env', 'SUDO_USER') | default(''))
+         or (lookup('env', 'USER') | default(''))
          or 'vscode' }}
     home_dir: "/home/{{ username }}"
     go_version: "1.25.4"
     gleam_version: "v1.12.0"
+
+    debian_packages:
+      - zsh
+      - python3
+      - python3-venv
+      - pkg-config
+      - fd-find
+      - wget
+      - curl
+      - git
+      - jq
+      - yq
+      - lsb-release
+      - software-properties-common
+      - gnupg
+      - valgrind
+      - cloc
+      - libsdl2-dev
+      - tmux
+      - xclip
+      - wl-clipboard
+      - clangd-19
+      - nnn
+      - erlang
+
+    arch_packages:
+      - zsh
+      - python
+      - pkgconf
+      - fd
+      - wget
+      - curl
+      - git
+      - jq
+      - yq
+      - gnupg
+      - valgrind
+      - cloc
+      - sdl2
+      - tmux
+      - xclip
+      - wl-clipboard
+      - clang
+      - nnn
+      - erlang
 
   tasks:
     # -- SYSTEM SETUP (root) --
@@ -20,40 +64,32 @@
     - name: Update apt cache
       apt:
         update_cache: yes
+      when: ansible_os_family == "Debian"
 
-    - name: Install system packages
+    - name: Update pacman cache
+      pacman:
+        update_cache: yes
+      when: ansible_os_family == "Archlinux"
+
+    - name: Install system packages (Debian)
       apt:
-        name:
-          - zsh
-          - python3
-          - python3-venv
-          - pkg-config
-          - fd-find
-          - wget
-          - curl
-          - git
-          - jq
-          - yq
-          - lsb-release
-          - software-properties-common
-          - gnupg
-          - valgrind
-          - cloc
-          - libsdl2-dev
-          - tmux
-          - xclip
-          - wl-clipboard
-          - clangd-19
-          - nnn
-          - erlang
+        name: "{{ debian_packages }}"
         state: present
+      when: ansible_os_family == "Debian"
 
-    - name: Create symlink for clangd
+    - name: Install system packages (Arch)
+      pacman:
+        name: "{{ arch_packages }}"
+        state: present
+      when: ansible_os_family == "Archlinux"
+
+    - name: Create symlink for clangd (Debian)
       file:
         src: /usr/bin/clangd-19
         dest: /usr/bin/clangd
         state: link
         force: yes
+      when: ansible_os_family == "Debian"
 
     - name: Download Go
       get_url:
@@ -241,7 +277,7 @@
 
     - name: Install beamup
       become: no
-      shell: | 
+      shell: |
         export PATH="$HOME/.cargo/bin:$PATH"
         curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tsloughter/beamup/releases/download/v0.6.0/beamup-installer.sh | sh
       args:
@@ -356,39 +392,42 @@
         creates: "{{ home_dir }}/.fzf/bin/fzf"
         executable: /bin/bash
 
-    - name: Download LLVM installation script
+    - name: Download LLVM installation script (Debian)
       get_url:
         url: https://apt.llvm.org/llvm.sh
         dest: /tmp/llvm.sh
         mode: '0755'
+      when: ansible_os_family == "Debian"
 
-    - name: Execute LLVM installation script
+    - name: Execute LLVM installation script (Debian)
       command: /tmp/llvm.sh 19
       become: yes
       args:
         creates: /usr/bin/clang-19
+      when: ansible_os_family == "Debian"
 
-    - name: Verify Clang 19 installation
-      command: clang-19 --version
+    - name: Verify Clang installation
+      shell: "{{ 'clang-19 --version' if ansible_os_family == 'Debian' else 'clang --version' }}"
       register: clang_version
       changed_when: false
 
-    - name: Create symlink for current clang version
+    - name: Create symlink for current clang version (Debian)
       file:
         src: "/usr/bin/clang-19"
         dest: "/usr/bin/clang"
         state: link
         force: yes
-
+      when: ansible_os_family == "Debian"
 
     - name: Display Clang version
       debug:
         var: clang_version.stdout
 
-    - name: Clean up installation script
+    - name: Clean up LLVM installation script
       file:
         path: /tmp/llvm.sh
         state: absent
+      when: ansible_os_family == "Debian"
 
     - name: Download OpenTofu install script
       get_url:
@@ -397,7 +436,7 @@
         mode: '0755'
 
     - name: Install OpenTofu
-      shell: /tmp/install-opentofu.sh --install-method deb
+      shell: "/tmp/install-opentofu.sh --install-method {{ 'deb' if ansible_os_family == 'Debian' else 'standalone' }}"
       args:
         creates: /usr/local/bin/tofu
 
@@ -413,5 +452,3 @@
       file:
         path: /tmp/install-opentofu.sh
         state: absent
-
-
