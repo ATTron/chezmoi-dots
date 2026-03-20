@@ -100,11 +100,15 @@ require("conform").setup({
     lua = { "stylua", lsp_format = "fallback" },
     python = { "ruff", "format" },
     rust = { "rustfmt", lsp_format = "fallback" },
+    typescript = { "oxfmt", lsp_format = "fallback" },
+    javascript = { "oxfmt", lsp_format = "fallback" },
+    typescriptreact = { "oxfmt", lsp_format = "fallback" },
+    javascriptreact = { "oxfmt", lsp_format = "fallback" },
   },
 })
 
 require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "c", "vim" },
+  ensure_installed = { "lua", "c", "vim", "typescript", "tsx", "javascript" },
   auto_install = true,
   highlight = { enable = true },
   indent = { enable = true },
@@ -141,7 +145,7 @@ vim.keymap.set("n", "<leader>cs", function()
   end)
 end, { desc = "Select colorscheme" })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "rust_analyzer", "zls", "ty", "zuban", "clangd", "gopls", "gleam" })
+vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam" })
 
 vim.lsp.config("lua_ls", {
   settings = {

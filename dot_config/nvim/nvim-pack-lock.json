@@ -22,11 +22,11 @@
       "src": "https://github.com/stevearc/conform.nvim.git"
     },
     "dojo.nvim": {
-      "rev": "1e0aaaa6e9fb2392aebd3fbdb0d170fc901c1223",
+      "rev": "3a41fedbc6cf8768ac2a5507442592bdd46e1705",
       "src": "https://github.com/ATTron/dojo.nvim"
     },
     "fff.nvim": {
-      "rev": "4b83987ea121dbdd0c6e1065b9bc480bdf954931",
+      "rev": "dd56a3a8a8a5a85522badaf6485f28c8f7a7c840",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "gitsigns.nvim": {
@@ -61,8 +61,12 @@
       "rev": "d205d1741d1fcc1f3117b4e839bf00f74ad72fa2",
       "src": "https://github.com/nvim-mini/mini.surround"
     },
+    "namu.nvim": {
+      "rev": "e7afbdf63a75ace6ccc6202d58a4f6f9ac09db92",
+      "src": "https://github.com/bassamsdata/namu.nvim"
+    },
     "nvim-lspconfig": {
-      "rev": "702f69fb167e9119f14adc4dfd4fcadf4d1b07a0",
+      "rev": "841c6d4139aedb8a3f2baf30cef5327371385b93",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tmux-navigation": {
@@ -84,6 +88,10 @@
     "tiny-inline-diagnostic.nvim": {
       "rev": "ba133b3e932416e4b9507095731a6d7276878fe8",
       "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+    },
+    "todo-comments.nvim": {
+      "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
+      "src": "https://github.com/folke/todo-comments.nvim"
     }
   }
 }
