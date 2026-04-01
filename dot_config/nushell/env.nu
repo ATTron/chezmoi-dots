@@ -123,7 +123,7 @@ $env.PATH = (
     | prepend ($env.HOME | path join ".opencode/bin")
     | prepend ($env.HOME | path join ".volta/bin")
     | prepend ($env.HOME | path join ".bun/bin")
-    | prepend $"($env.HOME)/.local/share/bob/nvim-bin"
+    | prepend $"($env.HOME)/.local/share/bob/nightly/bin/"
     | append '/usr/local/bin'
     | append ($env.HOME | path join ".config")
     | append ($env.HOME | path join ".cargo/bin")
@@ -131,7 +131,6 @@ $env.PATH = (
 )
 
 $env.STARSHIP_CONFIG = $env.HOME | path join ".config/starship.toml"
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
 
 if ((ls ~/.cache | where name == "starship" | length) == 0) {
     mkdir ~/.cache/starship
