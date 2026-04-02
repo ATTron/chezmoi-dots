@@ -42,6 +42,32 @@ vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase w
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
 
 -- autocommands
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    local bsr = { buffer = true, remap = true, silent = true }
+    vim.api.nvim_set_hl(0, "netrwMarkFile", { reverse = true, italic = true, bold = true })
+
+    vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = true, silent = true, nowait = true })
+    vim.keymap.set("n", "<Tab>", "mf", bsr)
+    vim.keymap.set("n", "S-Tab", "mF", bsr)
+
+    vim.keymap.set("n", "%", function()
+      local dir = vim.b.netrw_curdir or vim.fn.expand("%:p:h")
+      vim.ui.input({ prompt = "Enter filename: " }, function(input)
+        if input and input ~= "" then
+          local filepath = dir .. "/" .. input
+          local file_dir = vim.fn.fnamemodify(filepath, ":p:h")
+          vim.fn.mkdir(file_dir, "p")
+          vim.cmd("!touch " .. vim.fn.shellescape(filepath))
+          vim.api.nvim_feedkeys("<C-l>", "n", false)
+        end
+      end)
+    end, { buffer = true, silent = true })
+  end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
   callback = function()
@@ -181,3 +207,19 @@ local function find_shell()
 end
 
 vim.opt.shell = find_shell()
+
+function BebopReload(p)
+  for k, _ in pairs(package.loaded) do
+    if k:match("^bebop") then
+      package.loaded[k] = nil
+    end
+  end
+  require("bebop").setup({ preset = p or "default" })
+end
+
+-- netrw things
+vim.g.netrw_liststyle = 1
+vim.g.netrw_sort_by = "size"
+vim.g.netrw_banner = 1
+vim.g.netrw_sizestyle = "H"
+vim.g.netrw_bufsettings = "noma nomod nonu nobl nowrap"
