@@ -25,8 +25,8 @@ vim.opt.cursorline = true
 vim.keymap.set("n", "-", vim.cmd.Ex)
 vim.keymap.set("i", "jk", "<Esc>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "[m", "[mzz")
 vim.keymap.set("n", "]m", "]mzz")
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
@@ -37,25 +37,11 @@ vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("n", "bn", ":bnext<CR>")
 vim.keymap.set("n", "bp", ":bprevious<CR>")
-vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window size" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window size" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>")
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>")
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
 
 -- autocommands
-
--- temp fix: treesitter markdown crashes on nightly in hover floats
--- wrap get_node_text to handle nil range
-local original_get_node_text = vim.treesitter.get_node_text
-vim.treesitter.get_node_text = function(node, source, opts)
-  if node == nil or not node.range then
-    return ""
-  end
-  local ok, result = pcall(original_get_node_text, node, source, opts)
-  if ok then
-    return result
-  end
-  return ""
-end
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
@@ -149,7 +135,7 @@ require("conform").setup({
 })
 
 require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "c", "vim", "typescript", "tsx", "javascript" },
+  ensure_installed = { "lua", "c", "vim", "typescript", "tsx", "javascript", "zig", "rust", "python" },
   auto_install = true,
   highlight = { enable = true },
   indent = { enable = true, disable = { "c" } },
