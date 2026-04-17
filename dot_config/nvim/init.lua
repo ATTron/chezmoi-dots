@@ -175,7 +175,10 @@ vim.keymap.set("n", "<leader>cs", function()
   end)
 end, { desc = "Select colorscheme" })
 
-vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam" })
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+vim.lsp.config("*", {
+  capabilities = capabilities,
+})
 
 vim.lsp.config("lua_ls", {
   settings = {
@@ -186,6 +189,8 @@ vim.lsp.config("lua_ls", {
     },
   },
 })
+
+vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam" })
 
 vim.filetype.add({
   extension = {
