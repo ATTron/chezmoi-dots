@@ -133,6 +133,7 @@ require("conform").setup({
     typescriptreact = { "oxfmt", lsp_format = "fallback" },
     javascriptreact = { "oxfmt", lsp_format = "fallback" },
     c = { lsp_format = "fallback" },
+    zig = { lsp_format = "zig", "fmt" },
   },
 })
 
