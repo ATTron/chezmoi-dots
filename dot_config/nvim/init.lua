@@ -42,6 +42,9 @@ vim.keymap.set("n", "bp", ":bprevious<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>")
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>")
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
+vim.keymap.set({ "n", "x" }, "c", '"_c')
+vim.keymap.set({ "n", "x" }, "C", '"_C')
+vim.keymap.set({ "n", "x" }, "x", '"_x')
 
 -- autocommands
 
@@ -53,7 +56,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
     vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = true, silent = true, nowait = true })
     vim.keymap.set("n", "<Tab>", "mf", bsr)
-    vim.keymap.set("n", "S-Tab", "mF", bsr)
+    vim.keymap.set("n", "<S-Tab>", "mF", bsr)
 
     vim.keymap.set("n", "%", function()
       local dir = vim.b.netrw_curdir or vim.fn.expand("%:p:h")
