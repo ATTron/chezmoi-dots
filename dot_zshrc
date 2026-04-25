@@ -65,8 +65,10 @@ SPACESHIP_PROMPT_ORDER=(
 
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE="20"
 ZSH_AUTOSUGGEST_USE_ASYNC=1
+
 ## plugins
 zinit light zsh-users/zsh-completions
+
 # autoload -U compinit && compinit
 # load completions smartly (fast)
 autoload -Uz compinit
@@ -110,15 +112,18 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 ## shell integrations
+
 # fzf
 eval "$(fzf --zsh)"
+
 # starship
 eval "$(starship init zsh)"
+
 # zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
 # alias section
-alias nvim="~/.local/share/bob/nvim-bin/nvim"
+alias nvim="~/.local/share/bob/nightly/bin/nvim"
 alias vi=vim
 alias vim=nvim
 alias ls='ls --color'
