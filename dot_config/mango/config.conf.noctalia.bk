@@ -117,7 +117,7 @@ mouse_natural_scrolling=0
 gappih=5
 gappiv=5
 gappoh=5
-gappov=2
+gappov=5
 scratchpad_width_ratio=0.8
 scratchpad_height_ratio=0.9
 borderpx=2
@@ -142,21 +142,9 @@ tagrule=id:9,layout_name:tile
 
 # Autostart (exec-once runs only on initial launch, not on reload)
 exec-once=swaddle
+exec-once=qs -c noctalia-shell
 exec-once=swaybg -i /home/korra/.walls/shenron_upscaled.png
-
-# Bar + shell daemons (replaces noctalia-shell)
-exec-once=/home/korra/.config/waybar/scripts/start-waybar.sh
-exec-once=/home/korra/.config/waybar/scripts/mango-tag-watcher.sh
-exec-once=swaync
-exec-once=swayosd-server
-exec-once=wlsunset -t 4000 -T 6500 -S 08:30 -s 22:30
-exec-once=wl-paste --watch cliphist store
-
-# Idle / lock
-# Use the lock wrapper so the screensaver shares the wallpaper aesthetic.
-# swaylock's `daemonize` config option makes it fork, so swayidle's before-sleep
-# handler returns quickly and doesn't block suspend on lid close.
-exec-once=swayidle -w timeout 900 /home/korra/.local/bin/lock timeout 1600 "wlopm --off '*'" resume "wlopm --on '*'" before-sleep /home/korra/.local/bin/lock
+exec-once=swayidle -w timeout 900 'qs -c noctalia-shell ipc call lockScreen lock' timeout 1600 "wlopm --off '*'" resume "wlopm --on '*'" before-sleep 'qs -c noctalia-shell ipc call lockScreen lock'
 
 # Reload config
 bind=SUPER,r,reload_config
@@ -165,23 +153,20 @@ bind=SUPER,r,reload_config
 bind=SUPER,Return,spawn,foot
 bind=SUPER,d,spawn,fuzzel
 bind=SUPER,space,spawn,fuzzel
-bind=SUPER+SHIFT,space,spawn,sh -c "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
-bind=SUPER,b,spawn,/home/korra/.local/bin/wp-themed
+bind=SUPER+SHIFT,space,spawn,qs -c noctalia-shell ipc call launcher toggle
+bind=SUPER,b,spawn,/home/korra/.local/bin/wp-selector
 bind=SUPER,o,spawn,helium-browser
 
-# Notification panel toggle (Super+N collides with switch_layout, so use Super+Shift+N)
-bind=SUPER+SHIFT,n,spawn,swaync-client -t -sw
-
 # Lock screen
-bind=SUPER+ALT,l,spawn,/home/korra/.local/bin/lock
+bind=SUPER+ALT,l,spawn,qs -c noctalia-shell ipc call lockScreen lock
 
-# Media keys (routed through swayosd-client for OSD toasts)
-bind=NONE,XF86AudioRaiseVolume,spawn,swayosd-client --output-volume raise
-bind=NONE,XF86AudioLowerVolume,spawn,swayosd-client --output-volume lower
-bind=NONE,XF86AudioMute,spawn,swayosd-client --output-volume mute-toggle
-bind=NONE,XF86AudioMicMute,spawn,swayosd-client --input-volume mute-toggle
-bind=NONE,XF86MonBrightnessUp,spawn,swayosd-client --brightness raise
-bind=NONE,XF86MonBrightnessDown,spawn,swayosd-client --brightness lower
+# Media keys
+bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+
+bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-
+bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bind=NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bind=NONE,XF86MonBrightnessUp,spawn,brightnessctl --class=backlight set +5%
+bind=NONE,XF86MonBrightnessDown,spawn,brightnessctl --class=backlight set 5%-
 bind=NONE,XF86AudioPlay,spawn,playerctl -p tidal-hifi play-pause
 bind=NONE,XF86AudioNext,spawn,playerctl -p tidal-hifi next
 bind=NONE,XF86AudioPrev,spawn,playerctl -p tidal-hifi previous
