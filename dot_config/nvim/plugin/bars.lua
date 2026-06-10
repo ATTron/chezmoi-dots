@@ -144,15 +144,32 @@ il({
     if #clients == 0 then
       return "No LSP"
     end
-    return clients[1].name
+    return table.concat(
+      vim.tbl_map(function(cl)
+        return cl.name
+      end, clients),
+      ", "
+    )
   end,
   icon = icons.lsp,
   color = { fg = c.fg, gui = "bold" },
 })
 
 -- right
-ir({ "o:encoding", fmt = string.upper, cond = wide, color = { fg = c.green, gui = "bold" }, padding = { left = 0, right = 1 } })
-ir({ "fileformat", fmt = string.upper, icons_enabled = false, color = { fg = c.green, gui = "bold" }, padding = { left = 0, right = 1 } })
+ir({
+  "o:encoding",
+  fmt = string.upper,
+  cond = wide,
+  color = { fg = c.green, gui = "bold" },
+  padding = { left = 0, right = 1 },
+})
+ir({
+  "fileformat",
+  fmt = string.upper,
+  icons_enabled = false,
+  color = { fg = c.green, gui = "bold" },
+  padding = { left = 0, right = 1 },
+})
 ir({
   function()
     return jj_info

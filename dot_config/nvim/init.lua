@@ -48,6 +48,13 @@ vim.keymap.set({ "n", "x" }, "x", '"_x')
 
 -- autocommands
 
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.patch",
+  callback = function()
+    vim.opt_local.colorcolumn = "72"
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
   callback = function()
@@ -140,13 +147,12 @@ require("conform").setup({
   },
 })
 
-require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "c", "vim", "typescript", "tsx", "javascript", "zig", "rust", "python" },
-  auto_install = true,
-  highlight = { enable = true },
-  indent = { enable = true, disable = { "c" } },
-})
+require("nvim-treesitter").install({ "lua", "c", "vim", "typescript", "tsx", "javascript", "zig", "rust", "python" })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c" },
+  callback = function() end,
+})
 vim.opt.background = "dark"
 
 local colorschemes = { "gruvbox", "bebop" }
@@ -193,7 +199,21 @@ vim.lsp.config("lua_ls", {
   },
 })
 
-vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam" })
+vim.lsp.config("harper", {
+  cmd = { "harper-ls", "--stdio" },
+  filetypes = { "markdown", "text", "typst" },
+  root_markers = { ".harper-dictionary.txt", ".git" },
+  settings = {
+    ["harper-ls"] = {
+      userDictPath = vim.fn.expand("~/.config/harper-ls/dict.txt"),
+      linters = {
+        MoreAdjective = false,
+      },
+    },
+  },
+})
+
+vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam", "harper" })
 
 vim.filetype.add({
   extension = {

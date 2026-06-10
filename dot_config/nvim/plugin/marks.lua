@@ -1,14 +1,13 @@
 vim.pack.add({
-  { src = "https://github.com/cbochs/grapple.nvim" },
+  { src = "https://github.com/vieitesss/miniharp.nvim" },
 })
 
-vim.keymap.set("n", "<leader>a", "<cmd>Grapple toggle<cr>")
-vim.keymap.set("n", "<c-e>", "<cmd>Grapple toggle_tags<cr>")
+require("miniharp").setup({
+  autoload = true,
+  autosave = true,
+})
 
-vim.keymap.set("n", "<c-h>", "<cmd>Grapple select index=1<cr>")
-vim.keymap.set("n", "<c-t>", "<cmd>Grapple select index=2<cr>")
-vim.keymap.set("n", "<c-n>", "<cmd>Grapple select index=3<cr>")
-vim.keymap.set("n", "<c-s>", "<cmd>Grapple select index=4<cr>")
-
-vim.keymap.set("n", "<c-s-n>", "<cmd>Grapple cycle_tags next<cr>")
-vim.keymap.set("n", "<c-s-p>", "<cmd>Grapple cycle_tags prev<cr>")
+vim.keymap.set("n", "<leader>a", require("miniharp").toggle_file, { desc = "miniharp: toggle file mark" })
+vim.keymap.set("n", "<c-n>", require("miniharp").next, { desc = "miniharp: next file mark" })
+vim.keymap.set("n", "<c-p>", require("miniharp").prev, { desc = "miniharp: prev file mark" })
+vim.keymap.set("n", "<leader>e", require("miniharp").show_list, { desc = "miniharp: list marks" })
