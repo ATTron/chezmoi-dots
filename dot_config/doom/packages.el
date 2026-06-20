@@ -9,16 +9,16 @@
 ;;
 ;; Use 'C-h f package\!' to look up documentation for the `package!' macro.
 
-(package! rainbow-delimiters)
-(package! fennel-mode)
-(package! navigate
-  :recipe (:host github :repo "keith/evil-tmux-navigator"))
-(package! justl)
-(package! just-mode)
-(package! ghostel)
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;; (package! some-package)
+
+(package! typst-ts-mode :recipe (:host codeberg :repo "meow_king/typst-ts-mode"))
+(package! navigate :recipe (:host github :repo "keith/evil-tmux-navigator"))
+(package! rainbow-delimiters)
+(package! fennel-mode)
+(package! just-mode)
+(package! zoom)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

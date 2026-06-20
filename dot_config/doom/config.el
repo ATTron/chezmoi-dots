@@ -21,8 +21,8 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "Berkeley Mono" :size 16 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "Berkeley Mono" :size 16))
+(setq doom-font (font-spec :family "Berkeley Mono" :size 17 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "Berkeley Mono" :size 17))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -45,19 +45,26 @@
 (after! evil
   (require 'navigate))
 
-(setq evil-normal-state-cursor 'box
-      evil-insert-state-cursor 'box
-      evil-visual-state-cursor 'box
-      evil-emacs-state-cursor 'box
-      evil-replace-state-cursor 'box
-      evil-operator-state-cursor 'box
-      evil-motion-state-cursor 'box)
+(after! vertico
+  (vertico-flat-mode 1))
+
+(use-package! zoom
+  :config
+  (setopt zoom-size '(0.618 . 0.618))
+  (setopt zoom-mode t))
 
 (add-to-list 'default-frame-alist '(alpha-background . 98))
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
+(setq shell-file-name (executable-find "bash"))
+
+(after! cider
+  (setq cider-jack-in-default 'babashka
+        cider-interactive-eval-output-destination 'repl-buffer))
+
+(after! lispy
+  (define-key lispy-mode-map "[" nil)
+  (define-key lispy-mode-map "]" nil))
 
 ;; custom functions
 (defun +my/compile (arg)
@@ -70,20 +77,6 @@
                                default-directory)))
       (call-interactively #'compile))))
 
-(defun +my/next-diag ()
-  (interactive)
-  (condition-case _
-      (flycheck-next-error)
-    (user-error (flycheck-first-error))))
-
-(defun +my/prev-diag ()
-  (interactive)
-  (condition-case _
-      (flycheck-previous-error)
-    (user-error
-     (goto-char (point-max))
-     (flycheck-previous-error))))
-
 ;; keymaps
 (map! :n "-" #'dired-jump)
 (map! :after dired
@@ -94,21 +87,7 @@
        :desc "Compile" "c" #'+my/compile))
 (map! :leader
       (:prefix "o"
-       :desc "web browser" "w" #'xwidget-webkit-browse-url))
-(map! :n "]d" #'+my/next-diag)
-(map! :n "[d" #'+my/prev-diag)
-(map! :leader
-      (:prefix "t"
-       :desc "terminal" "t" #'ghostel))
-
-(after! tramp
-  (connection-local-set-profile-variables
-   'ghostel-tramp-direct-async
-   '((tramp-direct-async-process . t)))
-  (dolist (method '("ssh" "scp" "rsync"))
-    (connection-local-set-profiles
-     `(:application tramp :protocol ,method)
-     'ghostel-tramp-direct-async)))
+       :desc "man page search" "m" #'man))
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
