@@ -37,8 +37,8 @@ vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
-vim.keymap.set("n", "bn", ":bnext<CR>")
-vim.keymap.set("n", "bp", ":bprevious<CR>")
+vim.keymap.set("n", "<leader>bn", ":bnext<CR>")
+vim.keymap.set("n", "<leader>bp", ":bprevious<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>")
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>")
 vim.keymap.set("n", "<leader>pp", vim.pack.update)
@@ -47,13 +47,6 @@ vim.keymap.set({ "n", "x" }, "C", '"_C')
 vim.keymap.set({ "n", "x" }, "x", '"_x')
 
 -- autocommands
-
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = "*.patch",
-  callback = function()
-    vim.opt_local.colorcolumn = "72"
-  end,
-})
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
@@ -83,7 +76,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.hl_op()
   end,
 })
 
@@ -129,7 +122,7 @@ vim.pack.add({
   { src = "https://github.com/ATTron/bebop.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/stevearc/conform.nvim.git" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
 })
 
@@ -147,12 +140,32 @@ require("conform").setup({
   },
 })
 
-require("nvim-treesitter").install({ "lua", "c", "vim", "typescript", "tsx", "javascript", "zig", "rust", "python" })
+local ts_parsers = {
+  "lua",
+  "c",
+  "vim",
+  "vimdoc",
+  "markdown",
+  "markdown_inline",
+  "typescript",
+  "tsx",
+  "javascript",
+  "zig",
+  "rust",
+  "python",
+}
+
+local ok_ts, nvim_ts = pcall(require, "nvim-treesitter")
+if ok_ts then
+  nvim_ts.install(ts_parsers)
+end
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c" },
-  callback = function() end,
+  callback = function(ev)
+    pcall(vim.treesitter.start, ev.buf)
+  end,
 })
+
 vim.opt.background = "dark"
 
 local colorschemes = { "gruvbox", "bebop" }
@@ -199,21 +212,7 @@ vim.lsp.config("lua_ls", {
   },
 })
 
-vim.lsp.config("harper", {
-  cmd = { "harper-ls", "--stdio" },
-  filetypes = { "markdown", "text", "typst" },
-  root_markers = { ".harper-dictionary.txt", ".git" },
-  settings = {
-    ["harper-ls"] = {
-      userDictPath = vim.fn.expand("~/.config/harper-ls/dict.txt"),
-      linters = {
-        MoreAdjective = false,
-      },
-    },
-  },
-})
-
-vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam", "harper" })
+vim.lsp.enable({ "lua_ls", "tsgo", "oxlint", "rust_analyzer", "zls", "ty", "clangd", "gopls", "gleam", "ols" })
 
 vim.filetype.add({
   extension = {

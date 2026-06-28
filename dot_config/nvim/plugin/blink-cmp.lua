@@ -1,9 +1,6 @@
 vim.pack.add({
-  {
-    src = "https://github.com/saghen/blink.cmp",
-    version = vim.version.range("1"),
-  },
-  { src = "https://github.com/rafamadriz/friendly-snippets" },
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("v1.0") },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
 })
 
 require("blink.cmp").setup({
@@ -16,7 +13,6 @@ require("blink.cmp").setup({
 
   appearance = {
     nerd_font_variant = "mono",
-    use_nvim_cmp_as_default = true,
   },
 
   completion = {
@@ -31,13 +27,21 @@ require("blink.cmp").setup({
       window = { border = "rounded" },
     },
     menu = {
-      auto_show = true,
+      auto_show = function()
+        return not require("luasnip").expand_or_jumpable()
+      end,
       draw = {
         columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
       },
     },
   },
-
+  cmdline = {
+    enabled = true,
+    keymap = { preset = "cmdline" },
+    completion = {
+      menu = { auto_show = true },
+    },
+  },
   fuzzy = {
     implementation = "prefer_rust_with_warning",
     sorts = { "score", "sort_text", "label" },

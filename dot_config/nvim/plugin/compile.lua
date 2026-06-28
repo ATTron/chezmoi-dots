@@ -1,5 +1,5 @@
 local state = {
-  last_command = "make",
+  last_command = "make -k",
   buf = -1,
   win = -1,
 }
