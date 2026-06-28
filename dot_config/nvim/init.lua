@@ -136,6 +136,7 @@ require("conform").setup({
     typescriptreact = { "oxfmt", lsp_format = "fallback" },
     javascriptreact = { "oxfmt", lsp_format = "fallback" },
     c = { lsp_format = "fallback" },
+    odin = { "odinfmt", "-stdin" },
     zig = { lsp_format = "zig", "fmt" },
   },
 })
@@ -152,6 +153,7 @@ local ts_parsers = {
   "javascript",
   "zig",
   "rust",
+  "odin",
   "python",
 }
 
