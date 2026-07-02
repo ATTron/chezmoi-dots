@@ -33,6 +33,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-gruvbox)
+;; (setq doom-theme 'darktooth)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -45,8 +46,8 @@
 (after! evil
   (require 'navigate))
 
-(after! vertico
-  (vertico-flat-mode 1))
+;; (after! vertico
+;;   (vertico-flat-mode 1))
 
 (use-package! zoom
   :config
@@ -55,6 +56,10 @@
 
 (add-to-list 'default-frame-alist '(alpha-background . 98))
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(add-hook! 'odin-mode-hook
+  (setq-local js-indent-level 2
+              tab-width 2
+              indent-tabs-mode nil))   ; spaces, matching your Neovim expandtab
 
 (setq shell-file-name (executable-find "bash"))
 
@@ -78,6 +83,9 @@
       (call-interactively #'compile))))
 
 ;; keymaps
+(map! :leader
+      (:prefix "t"
+       :desc "open terminal" "t" #'ghostel))
 (map! :n "-" #'dired-jump)
 (map! :after dired
       :map dired-mode-map
