@@ -52,7 +52,20 @@
 (use-package! zoom
   :config
   (setopt zoom-size '(0.618 . 0.618))
+  ;; Don't let zoom fight Doom's popups (e.g. the *compilation* buffer): whenever
+  ;; any popup window is visible, skip the golden-ratio resize. Otherwise zoom
+  ;; keeps rebalancing around the size-fixed popup, making it render wrong and
+  ;; bouncing focus out of it so `q' never reaches the buffer.
+  (add-to-list 'zoom-ignore-predicates
+               (lambda () (and (fboundp '+popup-window-p)
+                               (cl-some #'+popup-window-p (window-list)))))
   (setopt zoom-mode t))
+
+;; Compilation popup: grab focus when it opens so I can read/scroll/`q' it
+;; immediately, instead of it opening unselected as a side window I can't
+;; navigate into. :quit t + :ttl nil keep it open until I dismiss it with `q'.
+(set-popup-rule! "^\\*\\(?:compil\\(?:ation\\|e-log\\)\\)\\*"
+  :size 0.3 :side 'bottom :select t :quit t :ttl nil :modeline t)
 
 (add-to-list 'default-frame-alist '(alpha-background . 98))
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
