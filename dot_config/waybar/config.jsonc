@@ -1,0 +1,141 @@
+// Waybar config for mango — replaces noctalia-shell.
+// Workspace state is read from `mmsg -g -t`; refreshes are signal-driven via mango-tag-watcher.sh.
+{
+  "layer": "top",
+  "position": "top",
+  "height": 16,
+  "spacing": 2,
+  "margin-top":    6,
+  "margin-bottom": 0,
+  "margin-left":   14,
+  "margin-right":  14,
+
+  "modules-left": [
+    "custom/tag-1", "custom/tag-2", "custom/tag-3",
+    "custom/tag-4", "custom/tag-5", "custom/tag-6",
+    "custom/tag-7", "custom/tag-8", "custom/tag-9"
+  ],
+  "modules-center": ["clock"],
+  "modules-right": [
+    "tray",
+    "network",
+    "bluetooth",
+    "pulseaudio",
+    "custom/battery-ppd",
+    "cpu",
+    "memory",
+    "temperature",
+    "custom/notifs",
+    "custom/power"
+  ],
+
+  // ---- workspace tags (mango) ----
+  "custom/tag-1": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 1", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 1" },
+  "custom/tag-2": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 2", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 2" },
+  "custom/tag-3": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 3", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 3" },
+  "custom/tag-4": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 4", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 4" },
+  "custom/tag-5": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 5", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 5" },
+  "custom/tag-6": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 6", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 6" },
+  "custom/tag-7": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 7", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 7" },
+  "custom/tag-8": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 8", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 8" },
+  "custom/tag-9": { "exec": "~/.config/waybar/scripts/mango-tag-state.sh 9", "return-type": "json", "format": "{}", "signal": 8, "interval": "once", "on-click": "~/.config/waybar/scripts/mango-tag-switch.sh 9" },
+
+  "clock": {
+    "interval": 30,
+    "format": "{:%I:%M %p  %a, %b %d}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "left",
+      "format": {
+        "today": "<span color='#fabd2f'><b>{}</b></span>"
+      }
+    }
+  },
+
+  "tray": { "icon-size": 16, "spacing": 8 },
+
+  "network": {
+    "interface":           "wlan0",
+    "format-wifi":         "  {essid}",
+    "format-ethernet":     "  {ifname}",
+    "format-disconnected": "  off",
+    "format-icons":        ["", "", "", ""],
+    "tooltip-format-wifi": "{essid}\nSignal: {signalStrength}%\n{ipaddr}",
+    "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click":       "/home/korra/.config/waybar/scripts/wifi-menu.sh",
+    "on-click-right": "foot -e nmtui",
+    "interval": 5
+  },
+
+  "bluetooth": {
+    "format":               "",
+    "format-on":            "",
+    "format-connected":     "  {device_alias}",
+    "format-off":           "",
+    "format-disabled":      "",
+    "format-no-controller": "",
+    "tooltip-format":           "Bluetooth: {status}",
+    "tooltip-format-connected": "{controller_alias}\n{device_enumerate}",
+    "tooltip-format-off":       "Bluetooth off",
+    "tooltip-format-disabled":  "Bluetooth disabled (rfkill)",
+    "on-click":       "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
+    "on-click-right": "foot -e bluetuith"
+  },
+
+  "pulseaudio": {
+    "format":         "{icon}  {volume}%",
+    "format-muted":   "",
+    "format-icons":   { "default": ["", "", ""] },
+    "scroll-step": 2,
+    "on-click":       "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol",
+    "tooltip-format": "{desc}: {volume}%"
+  },
+
+  "custom/battery-ppd": {
+    "exec":         "/home/korra/.config/waybar/scripts/battery-ppd.sh",
+    "interval":     5,
+    "return-type":  "json",
+    "format":       "{}",
+    "on-click":     "/home/korra/.config/waybar/scripts/ppd-cycle.sh",
+    "tooltip":      true
+  },
+
+  "cpu":         { "interval": 5, "format": "勺 {usage}%", "tooltip": false },
+  "memory":      { "interval": 5, "format": " {percentage}%", "tooltip-format": "Used: {used:0.1f} / {total:0.1f} GiB" },
+  "temperature": {
+    "interval": 5,
+    "thermal-zone": 0,
+    "format":              " {temperatureC}°",
+    "critical-threshold":  85,
+    "format-critical":     " {temperatureC}°"
+  },
+
+  "custom/notifs": {
+    "exec": "swaync-client -swb",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+      "notification":         "",
+      "none":                 "",
+      "dnd-notification":     "",
+      "dnd-none":             "",
+      "inhibited-notification": "",
+      "inhibited-none":       "",
+      "dnd-inhibited-notification": "",
+      "dnd-inhibited-none":   ""
+    },
+    "on-click":       "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true,
+    "tooltip-format": "Notifications"
+  },
+
+  "custom/power": {
+    "format": " ",
+    "tooltip": false,
+    "on-click": "/home/korra/.config/waybar/scripts/power-menu.sh"
+  }
+}
