@@ -96,12 +96,16 @@
         url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
         dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
         mode: '0644'
+      tags:
+        - golang
 
     - name: Extract Go
       unarchive:
         src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
         dest: /usr/local
         remote_src: yes
+      tags:
+        - golang
 
     - name: Create symlink for Go
       file:
@@ -109,11 +113,15 @@
         dest: /usr/local/bin/go
         state: link
         force: yes
+      tags:
+        - golang
 
     - name: Remove Go tarball
       file:
         path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
         state: absent
+      tags:
+        - golang
 
 
     - name: Set zsh as default shell
