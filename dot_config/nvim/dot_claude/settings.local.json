@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(gh search:*)",
-      "Read(//Users/anthony/.local/share/nvim/**)",
-      "Bash(harper-cli lint *)"
-    ]
-  }
-}
