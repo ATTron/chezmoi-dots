@@ -46,6 +46,18 @@ export PATH="${HOME}/.local/zig:$PATH"
 # c3 setup
 export PATH="${HOME}/.local/bin/c3:$PATH"
 
+# guix profile — APPENDED, not prepended, on purpose.
+# ~/guix-config/manifest.scm installs into ~/.guix-profile, but that bin dir was
+# never on PATH, so every package there (rg, fzf, btop, tmux, ...) was resolving
+# to the Debian copy in /usr/bin instead. Appending fixes that without changing
+# which binary wins for anything already installed: /usr/bin still shadows the
+# guix build. Only packages Debian does NOT provide (aerc, msmtp) resolve here.
+# To let a guix package win instead, uncomment it in manifest.scm AND move this
+# line above the others.
+export PATH="${PATH}:${HOME}/.guix-profile/bin"
+export MANPATH="${MANPATH:-$(manpath 2>/dev/null)}:${HOME}/.guix-profile/share/man"
+export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}:${HOME}/.guix-profile/share"
+
 # nvm setup
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"

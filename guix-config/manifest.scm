@@ -10,6 +10,9 @@
   "fzf"
   "nnn"
   "bat"
+  "du-dust"
+  "tree-sitter"
+  "tree-sitter-cli"
   ;; dotfiles
   "chezmoi"
   ;; data
@@ -24,6 +27,12 @@
   ;; dev helpers
   "just"
   "cloc"
+  ;; mail — aerc (Guix 0.21 vs Debian trixie 0.20); built with notmuch support.
+  ;; msmtp is the outbound path for BOTH aerc and `git send-email`: aerc has no
+  ;; TLS-pinning option and Proton Bridge presents a self-signed CA cert, so
+  ;; msmtp's tls_trust_file pins it without polluting the system trust store.
+  "aerc"
+  "msmtp"
   ;; net / media
   "yt-dlp"
   ;; secrets / backup
