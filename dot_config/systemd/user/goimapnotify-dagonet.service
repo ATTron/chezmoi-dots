@@ -1,0 +1,30 @@
+[Unit]
+Description=IMAP IDLE watcher for the dagonet command mailbox
+Documentation=file:///home/twan/.config/goimapnotify/goimapnotify.yaml
+# Bridge is the IMAP server; without it there is nothing to connect to.
+After=protonmail-bridge.service network-online.target
+Wants=protonmail-bridge.service
+
+[Service]
+Type=simple
+ExecStart=%h/.guix-profile/bin/goimapnotify -conf %h/.config/goimapnotify/goimapnotify.yaml
+# It exits if the IDLE connection drops or Bridge restarts; always come back. 30s so a Bridge
+# restart loop cannot turn into a tight respawn loop.
+Restart=always
+RestartSec=30
+
+# Same hardening as mbsync.service. AF_INET is needed for loopback IMAP; it runs /usr/bin/mbsync
+# on new mail, so no NoNewPrivileges concerns beyond what mbsync itself already runs under.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=default.target
