@@ -1,0 +1,39 @@
+# IMAP IDLE watcher for dagonet's own command mailbox.
+#
+# WHY THIS EXISTS
+# Quarantine DELETE replies are filed by a Proton filter into Folders/Dagonet, and
+# quarantine-reaper.path acts within ~3 s of one appearing in the local maildir. But mail only
+# reached the maildir when mbsync.timer fired, on *:0/5 -- so a reply could sit unread on the
+# server for up to 5 minutes. Measured twice on 2026-08-12: replies landed 22 s and 36 s after a
+# sync and both waited out the full interval.
+#
+# IDLE is push, not polling: this process blocks on a socket until Proton says a message arrived,
+# then runs mbsync for that ONE channel. It costs less CPU than the timer sweep it short-circuits
+# (the full 4-channel sync measured 0.234 s CPU per run, 288 runs/day).
+#
+# The 5-minute `mbsync -a` sweep is deliberately left in place. If this watcher dies or its
+# connection drops, latency degrades to the old 0-5 min rather than breaking.
+host: 127.0.0.1
+port: 1143
+tls: false
+tlsOptions:
+  # STARTTLS lives inside tlsOptions, not at top level (a top-level `starttls` is rejected as an
+  # invalid key by 2.5.3).
+  starttls: true
+  # NOTE: goimapnotify has no CA-file option -- only this boolean. Bridge presents a self-signed
+  # cert, so verification has to be skipped here, unlike msmtp (tls_trust_file) and mbsync
+  # (CertificateFile) which both PIN that exact cert. Accepted because this connection never
+  # leaves loopback: an attacker would already need local access to bind 127.0.0.1:1143.
+  # If a CA-file option ever appears upstream, pin ~/.config/protonmail/bridge-cert.pem here.
+  rejectUnauthorized: false
+username: anthony@templetron.io
+# Same single source of truth as mbsync's PassCmd -- rotating the Bridge password stays a
+# one-file edit. Folded scalar so the quoting inside the sed expression survives untouched.
+passwordCMD: >-
+  sed -nE 's/^set imap_pass *= *"?([^"]*)"?$/\1/p' /home/twan/.mutt/imap-proton
+# ONLY this folder. Not INBOX -- there is no reason for this to watch personal mail.
+boxes:
+  - "Folders/Dagonet"
+# Sync just that channel. quarantine-reaper.path sees the new file and fires the reaper itself,
+# so nothing here needs to touch the reaper (a user unit could not start a system unit anyway).
+onNewMail: /usr/bin/mbsync proton-dagonet
