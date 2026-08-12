@@ -33,6 +33,14 @@
   ;; msmtp's tls_trust_file pins it without polluting the system trust store.
   "aerc"
   "msmtp"
+  ;; goimapnotify: holds an IMAP IDLE connection to Proton Bridge and runs
+  ;; `mbsync proton-dagonet` the moment Proton files a reply into Folders/Dagonet.
+  ;; That folder is where quarantine DELETE replies land, and mbsync's 5-minute
+  ;; timer meant up to 5 min of latency before one was acted on. IDLE is push, not
+  ;; polling: the process sleeps on a socket, so it costs less CPU than the timer
+  ;; sweep it short-circuits. The 5-minute `mbsync -a` sweep is deliberately kept
+  ;; as a fallback, so a dead IDLE connection degrades to the old behaviour.
+  "goimapnotify"
   ;; net / media
   "yt-dlp"
   ;; secrets / backup
