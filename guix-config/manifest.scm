@@ -48,6 +48,7 @@
   "borg"             ; Debian: borgbackup
   ;; tooling
   "cmake"
+  "typst"
 
   ;; --- OPTIONAL: these SHADOW the system (apt) version via PATH. Uncomment only
   ;; --- if you specifically want the newer Guix build to win for your user shell.
