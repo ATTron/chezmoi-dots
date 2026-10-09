@@ -1,5 +1,5 @@
 [Unit]
-Description=IMAP IDLE watcher for the dagonet command mailbox
+Description=IMAP IDLE watcher for the hestia command mailbox
 Documentation=file:///home/twan/.config/goimapnotify/goimapnotify.yaml
 # Bridge is the IMAP server; without it there is nothing to connect to.
 After=protonmail-bridge.service network-online.target

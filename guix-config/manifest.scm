@@ -34,7 +34,7 @@
   "aerc"
   "msmtp"
   ;; goimapnotify: holds an IMAP IDLE connection to Proton Bridge and runs
-  ;; `mbsync proton-dagonet` the moment Proton files a reply into Folders/Dagonet.
+  ;; `mbsync proton-hestia` the moment Proton files a reply into Folders/Hestia.
   ;; That folder is where quarantine DELETE replies land, and mbsync's 5-minute
   ;; timer meant up to 5 min of latency before one was acted on. IDLE is push, not
   ;; polling: the process sleeps on a socket, so it costs less CPU than the timer

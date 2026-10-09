@@ -1,7 +1,7 @@
-# IMAP IDLE watcher for dagonet's own command mailbox.
+# IMAP IDLE watcher for hestia's own command mailbox.
 #
 # WHY THIS EXISTS
-# Quarantine DELETE replies are filed by a Proton filter into Folders/Dagonet, and
+# Quarantine DELETE replies are filed by a Proton filter into Folders/Hestia, and
 # quarantine-reaper.path acts within ~3 s of one appearing in the local maildir. But mail only
 # reached the maildir when mbsync.timer fired, on *:0/5 -- so a reply could sit unread on the
 # server for up to 5 minutes. Measured twice on 2026-08-12: replies landed 22 s and 36 s after a
@@ -33,7 +33,7 @@ passwordCMD: >-
   sed -nE 's/^set imap_pass *= *"?([^"]*)"?$/\1/p' /home/twan/.mutt/imap-proton
 # ONLY this folder. Not INBOX -- there is no reason for this to watch personal mail.
 boxes:
-  - "Folders/Dagonet"
+  - "Folders/Hestia"
 # Sync just that channel. quarantine-reaper.path sees the new file and fires the reaper itself,
 # so nothing here needs to touch the reaper (a user unit could not start a system unit anyway).
-onNewMail: /usr/bin/mbsync proton-dagonet
+onNewMail: /usr/bin/mbsync proton-hestia
