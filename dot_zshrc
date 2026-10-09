@@ -54,6 +54,8 @@ export PATH="${HOME}/.local/bin/c3:$PATH"
 # guix build. Only packages Debian does NOT provide (aerc, msmtp) resolve here.
 # To let a guix package win instead, uncomment it in manifest.scm AND move this
 # line above the others.
+# guix pull puts the current guix here; it must win over Debian's /usr/bin/guix.
+export PATH="${HOME}/.config/guix/current/bin:${PATH}"
 export PATH="${PATH}:${HOME}/.guix-profile/bin"
 export MANPATH="${MANPATH:-$(manpath 2>/dev/null)}:${HOME}/.guix-profile/share/man"
 export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}:${HOME}/.guix-profile/share"
